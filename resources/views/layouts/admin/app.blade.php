@@ -41,7 +41,9 @@
 
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
 </head>
 <body>
     @include('layouts.admin.admin')
@@ -62,5 +64,6 @@
 	<!-- Custom js for this page -->
     <script src="{{ asset('../assets/js/dashboard-dark.js')}}"></script>
 	<!-- End custom js for this page -->
+    @livewireScriptConfig 
 </body>
 </html>

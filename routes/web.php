@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlogController;
+use App\Livewire\PermissionComponent;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -27,7 +28,8 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    Route::resource('/roles', RoleController::class);
+    Route::resource('/users', UserController::class);
     // Route::resource('blogs', BlogController::class);
+    Route::get('/permissions', PermissionComponent::class);
 });
