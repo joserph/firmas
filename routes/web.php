@@ -5,7 +5,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlogController;
+use App\Livewire\NaturalPersonComponent;
 use App\Livewire\PermissionComponent;
+use App\Livewire\SignatureComponent;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -32,4 +34,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/users', UserController::class);
     // Route::resource('blogs', BlogController::class);
     Route::get('/permissions', PermissionComponent::class);
+    Route::get('signatures', SignatureComponent::class)->name('signatures');
+    Route::get('natural-persons', NaturalPersonComponent::class)->name('natural-persons');
 });

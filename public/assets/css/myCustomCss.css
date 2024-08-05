@@ -1,0 +1,38 @@
+.pictureContainer{
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+}
+
+.picture{
+    width: 180px;
+    height: 215px;
+    background-color: #999999;
+    border: 1px solid #CCCCCC;
+    color: #FFFFFF;
+    border-radius: 5%;
+    margin: 5px auto;
+    overflow: hidden;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+}
+
+.imgCustom{
+    width: 100%; 
+    vertical-align: middle;
+}
+
+.inputImage{
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: 0 !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.custom-button{
+    border: none;
+}

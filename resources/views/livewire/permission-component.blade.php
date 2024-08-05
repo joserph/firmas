@@ -17,19 +17,8 @@
    <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
          <div class="card">
-            @if (session('success'))
-               <div class="alert alert-success">
-                  {{ session('success') }}
-               </div>
-            @endif
-
             <div class="card-header">
                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  {{-- @can('create-user')
-                        <a class="btn btn-icon btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="New" href="{{ route('users.create') }}">
-                           <i data-feather="plus-circle"></i>
-                        </a>
-                  @endcan --}}
                   <button type="button" class="btn btn-primary" wire:click='openCreateModal()' data-bs-toggle="tooltip" data-bs-placement="top" title="Crear">
                      <i class="fa-solid fa-circle-plus"></i>
                   </button>

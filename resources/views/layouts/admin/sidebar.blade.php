@@ -38,6 +38,18 @@
                     <span class="link-title">Permisos</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ url('signatures') }}" class="nav-link">
+                    <i class="link-icon" data-feather="bold"></i>
+                    <span class="link-title">Firmas</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('natural-persons') }}" class="nav-link">
+                    <i class="link-icon" data-feather="bold"></i>
+                    <span class="link-title">Persona Natural</span>
+                </a>
+            </li>
             <li class="nav-item nav-category">web apps</li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false" aria-controls="emails">
