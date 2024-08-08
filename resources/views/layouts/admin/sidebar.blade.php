@@ -39,6 +39,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url('partners') }}" class="nav-link">
+                    <i class="link-icon" data-feather="bold"></i>
+                    <span class="link-title">Partners</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('signatures') }}" class="nav-link">
                     <i class="link-icon" data-feather="bold"></i>
                     <span class="link-title">Firmas</span>

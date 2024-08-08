@@ -43,7 +43,7 @@ class PermissionComponent extends Component
             $permission->save();
 
             $this->closeCreateModal();
-            $this->dispatch('success', ['message' => 'Permiso Editado con exito!']);
+            $this->dispatch('success', ['message' => 'Permiso actualizado con exito!']);
         }else{
             $this->validate([
                 'name' => 'required|unique:permissions,name',

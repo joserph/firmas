@@ -34,8 +34,12 @@
         <link rel="shortcut icon" href="{{ asset('../assets/images/favicon.png')}}" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link rel="stylesheet" href="{{ asset('assets/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+        
+        
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         @stack('css')
         @livewireStyles
+        
     </head>
     <body>
         
@@ -50,13 +54,13 @@
                 @include('layouts.admin.footer')
             </div>
         </div>
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="{{ asset('../assets/vendors/core/core.js')}}"></script>
         <!-- endinject -->
 
         <!-- Plugin js for this page -->
-        <script src="{{ asset('../assets/vendors/flatpickr/flatpickr.min.js')}}"></script>
-        <script src="{{ asset('../assets/vendors/apexcharts/apexcharts.min.js')}}"></script>
+        {{-- <script src="{{ asset('../assets/vendors/flatpickr/flatpickr.min.js')}}"></script> --}}
+        {{-- <script src="{{ asset('../assets/vendors/apexcharts/apexcharts.min.js')}}"></script> --}}
         <!-- End plugin js for this page -->
 
         <!-- inject:js -->
@@ -65,11 +69,13 @@
         <!-- endinject -->
 
         <!-- Custom js for this page -->
-        <script src="{{ asset('../assets/js/dashboard-dark.js')}}"></script>
+        {{-- <script src="{{ asset('../assets/js/dashboard-dark.js')}}"></script> --}}
         <!-- End custom js for this page -->
-        @stack('modals')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        {{-- @stack('modals') --}}
         
         @stack('js')
         @livewireScripts
+        
     </body>
 </html>
