@@ -38,38 +38,44 @@
             </div>
             <div class="card-body">
                <div class="table-responsive pt-3">
+                  @if($partners->isNotEmpty())
                   <table class="table table-hover table-sm">
-                        <thead>
-                           <tr>
-                              <th class="text-center">Nombre</th>
-                              <th class="text-center">Precio Preferencial</th>
-                              <th class="text-center">Acciones</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           @foreach ($partners as $item)
-                           <tr>
-                              <td class="text-center align-middle">{{ $item->name }}</td>
-                              <td class="text-center align-middle">
-                                 @if ($item->preferential_price == 1)
-                                    <i class="fa-regular fa-circle-check text-success"></i>
-                                 @else
-                                    <i class="fa-regular fa-circle-xmark text-danger"></i>
-                                 @endif
-                              </td>
-                              <td class="text-center">
-                                    <button wire:click="openCreateModal({{$item->id}})" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-icon btn-outline-warning btn-xs">
-                                       <i class="fa-regular fa-pen-to-square"></i>
-                                    </button>
-                                    
-                                    <button class="btn btn-icon btn-outline-danger btn-xs" wire:click='$dispatch("delete", {{$item->id}})' data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                       <i class="fa-solid fa-trash"></i>
-                                    </button>
-                              </td>
-                           </tr>
-                           @endforeach
-                        </tbody>
+                     <thead>
+                        <tr>
+                           <th wire:click='doSort("name")' class="text-center">
+                              <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Nombre' columnName='name' />
+                           </th>
+                           <th class="text-center">Precio Preferencial</th>
+                           <th class="text-center">Acciones</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        @foreach ($partners as $item)
+                        <tr>
+                           <td class="text-center align-middle">{{ $item->name }}</td>
+                           <td class="text-center align-middle">
+                              @if ($item->preferential_price == 1)
+                                 <i class="fa-regular fa-circle-check text-success"></i>
+                              @else
+                                 <i class="fa-regular fa-circle-xmark text-danger"></i>
+                              @endif
+                           </td>
+                           <td class="text-center">
+                                 <button wire:click="openCreateModal({{$item->id}})" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-icon btn-outline-warning btn-xs">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                 </button>
+                                 
+                                 <button class="btn btn-icon btn-outline-danger btn-xs" wire:click='$dispatch("delete", {{$item->id}})' data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                 </button>
+                           </td>
+                        </tr>
+                        @endforeach
+                     </tbody>
                   </table>
+                  @else
+                  <p class="text-center">No se encontraron resultados con la busqueda <strong>"{{ $search }}"</strong> 😟</p>
+                  @endif
                   {{ $partners->links() }}
                </div>
             </div>

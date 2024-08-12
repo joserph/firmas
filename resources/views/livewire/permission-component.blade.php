@@ -19,6 +19,19 @@
          <div class="card">
             <div class="card-header">
                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <input type="search" wire:model.live.debounce.300ms='search' class="form-control" name="" id="" placeholder="Buscar...">
+                  <div class="col-auto">
+                     <label for="inputPassword6" class="col-form-label">Paginacion</label>
+                  </div>
+                  <div class="col-auto col-sm-1">
+                     <select name="perPage" wire:model.live='perPage' id="perPage" class="form-select">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                     </select>
+                  </div>
                   <button type="button" class="btn btn-primary" wire:click='openCreateModal()' data-bs-toggle="tooltip" data-bs-placement="top" title="Crear">
                      <i class="fa-solid fa-circle-plus"></i>
                   </button>
@@ -26,37 +39,35 @@
             </div>
             <div class="card-body">
                <div class="table-responsive pt-3">
-                  <table class="table table-bordered table-hover border-primary table-sm">
-                        <thead>
-                           <tr>
-                              <th class="text-center">Nombre</th>
-                              <th class="text-center">Acciones</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           @foreach ($permissions as $item)
-                           <tr>
-                              <td class="text-center align-middle">{{ $item->name }}</td>
-                              <td class="text-center">
-                                    {{-- @can('edit-user') --}}
-                                    <button wire:click="openCreateModal({{$item->id}})" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-icon btn-outline-warning btn-xs">
-                                       <i class="fa-regular fa-pen-to-square"></i>
-                                    </button>
-                                    {{-- @endcan --}}
-                                    
-                                    {{-- @can('delete-user') --}}
-                                    {{-- {!! Form::open(['route' => ['users.destroy', $item->id], 'method' => 'DELETE', 'style' => 'display:inline']) !!}
-                                       {{ Form::button('<i class="fa-solid fa-trash"></i> ' . '', ['type' => 'submit', 'data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'top', 'title' => 'Delete', 'class' => 'btn btn-icon btn-outline-danger btn-xs', 'onclick' => 'return confirm("¿Seguro de eliminar el color?")']) }}
-                                    {!! Form::close() !!} --}}
-                                    <button class="btn btn-icon btn-outline-danger btn-xs" wire:click='$dispatch("delete", {{$item->id}})' data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                       <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                    {{-- @endcan --}}
-                              </td>
-                           </tr>
-                           @endforeach
-                        </tbody>
+                  @if ($permissions->isNotEmpty())
+                  <table class="table table-hover table-sm">
+                     <thead>
+                        <tr>
+                           <th wire:click='doSort("name")' class="text-center">
+                              <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Nombre' columnName='name' />
+                           </th>
+                           <th class="text-center">Acciones</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        @foreach ($permissions as $item)
+                        <tr>
+                           <td class="text-center align-middle">{{ $item->name }}</td>
+                           <td class="text-center">
+                              <button wire:click="openCreateModal({{$item->id}})" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-icon btn-outline-warning btn-xs">
+                                 <i class="fa-regular fa-pen-to-square"></i>
+                              </button>
+                              <button class="btn btn-icon btn-outline-danger btn-xs" wire:click='$dispatch("delete", {{$item->id}})' data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                 <i class="fa-solid fa-trash"></i>
+                              </button>
+                           </td>
+                        </tr>
+                        @endforeach
+                     </tbody>
                   </table>
+                  @else
+                  <p class="text-center">No se encontraron resultados con la busqueda <strong>"{{ $search }}"</strong> 😟</p>
+                  @endif
                   {{ $permissions->links() }}
                </div>
             </div>

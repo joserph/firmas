@@ -10,25 +10,28 @@ use Livewire\Attributes\On;
 class PermissionComponent extends Component
 {
     use WithPagination;
-    
     protected $paginationTheme = 'bootstrap';
-    public $name;
-    public $id;
-    public $guard_name;
-    // public $permission;
-    public $modal = false;
-    public $myPermission = null;
-    // public function mount()
-    // {
-    //     $this->permissions = Permission::get();
-    // }
+    public $name, $id, $guard_name, $modal = false, $myPermission = null, $search = '', $perPage = 10;
+    public $sortDirection = 'DESC', $sortColumn = 'id';
 
     public function render()
     {
-        $permissions = Permission::orderBy('id', 'desc')->paginate(10);
         return view('livewire.permission-component', [
-            'permissions' => $permissions
+            'permissions' => Permission::search($this->search)
+                ->orderBy($this->sortColumn, $this->sortDirection)
+                ->paginate($this->perPage)
         ]);
+    }
+
+    public function doSort($column)
+    {
+        if($this->sortColumn === $column)
+        {
+            $this->sortDirection = ($this->sortDirection == 'ASC') ? 'DESC' : 'ASC';
+            return;
+        }
+        $this->sortColumn = $column;
+        $this->sortDirection = 'ASC';
     }
     
     public function savePermission()
@@ -86,6 +89,16 @@ class PermissionComponent extends Component
     {
         $permission = Permission::find($id);
         $permission->delete();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
 
 }

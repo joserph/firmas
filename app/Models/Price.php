@@ -21,7 +21,6 @@ class Price extends Model
 
     public static function search($search)
     {
-        // dd('buscar');
         return empty($search) ? static::query()
             : static::where('validity', 'like', '%'.$search.'%')
                 ->orWhere('amount', 'like', '%'.$search.'%')

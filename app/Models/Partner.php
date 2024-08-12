@@ -12,14 +12,13 @@ class Partner extends Model
 
     protected $fillable = [
         'name',
-        // 'bank',
-        // 'account_number',
         'preferential_price',
         'user_id'
     ];
 
-    // protected $casts = [
-    //     'bank' => 'array',
-    //     'account_number' => 'array',
-    // ];
+    public static function search($search)
+    {
+        return empty($search) ? static::query()
+            : static::where('name', 'like', '%'.$search.'%');
+    }
 }

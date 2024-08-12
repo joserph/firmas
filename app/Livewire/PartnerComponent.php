@@ -7,11 +7,15 @@ use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
+use Livewire\WithPagination;
 
 class PartnerComponent extends Component
 {
-    public $modal = false, $myPartner = null;
-    public $name, $preferential_price, $user_id, $users, $id;
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
+    public $modal = false, $myPartner = null, $search = '', $perPage = 10;
+    public $name, $preferential_price, $user_id, $users, $id, $sortDirection = 'DESC', $sortColumn = 'id';
 
     public function mount()
     {
@@ -20,10 +24,22 @@ class PartnerComponent extends Component
 
     public function render()
     {
-        $partners = Partner::orderBy('id', 'desc')->paginate(10);
         return view('livewire.partner-component', [
-            'partners' => $partners
+            'partners' => Partner::search($this->search)
+                ->orderBy($this->sortColumn, $this->sortDirection)
+                ->paginate($this->perPage)
         ]);
+    }
+
+    public function doSort($column)
+    {
+        if($this->sortColumn === $column)
+        {
+            $this->sortDirection = ($this->sortDirection == 'ASC') ? 'DESC' : 'ASC';
+            return;
+        }
+        $this->sortColumn = $column;
+        $this->sortDirection = 'ASC';
     }
 
     public function openCreateModal(Partner $partner = null)
@@ -93,5 +109,15 @@ class PartnerComponent extends Component
     {
         $partner = Partner::find($id);
         $partner->delete();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
 }

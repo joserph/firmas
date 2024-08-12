@@ -34,31 +34,31 @@
             @endcan
             <li class="nav-item">
                 <a href="{{ url('permissions') }}" class="nav-link">
-                    <i class="link-icon" data-feather="bold"></i>
+                    <i class="link-icon" data-feather="toggle-left"></i>
                     <span class="link-title">Permisos</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ url('partners') }}" class="nav-link">
-                    <i class="link-icon" data-feather="bold"></i>
+                    <i class="link-icon" data-feather="slack"></i>
                     <span class="link-title">Partners</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ url('prices') }}" class="nav-link">
-                    <i class="link-icon" data-feather="bold"></i>
+                    <i class="link-icon" data-feather="dollar-sign"></i>
                     <span class="link-title">Precios</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ url('signatures') }}" class="nav-link">
-                    <i class="link-icon" data-feather="bold"></i>
+                    <i class="link-icon" data-feather="framer"></i>
                     <span class="link-title">Firmas</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ url('natural-persons') }}" class="nav-link">
-                    <i class="link-icon" data-feather="bold"></i>
+                    <i class="link-icon" data-feather="git-branch"></i>
                     <span class="link-title">Persona Natural</span>
                 </a>
             </li>
