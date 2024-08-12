@@ -6,10 +6,11 @@ use App\Models\Geography;
 use App\Models\Nationalities;
 use App\Models\NaturalPerson;
 use App\Models\NaturalPersonFile;
+use App\Models\Signature;
 use App\Models\Validity;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class NaturalPersonComponent extends Component
 {
@@ -118,7 +119,6 @@ class NaturalPersonComponent extends Component
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityAll();
         }
-        
     }
 
     public function validateForm()
@@ -156,7 +156,6 @@ class NaturalPersonComponent extends Component
 
     public function saveNaturalPerson()
     {
-        // dd($this->f_cedulaFront->getClientOriginalName());
         ($this->con_ruc == 'SI') ? $this->requiredRuc = 'required' : $this->requiredRuc = '';
         if($this->currentStep === 2)
         {
@@ -165,7 +164,7 @@ class NaturalPersonComponent extends Component
                 'f_cedulaBack'      => 'required|image|mimes:jpg,png',
                 'f_selfie'          => 'required|image|mimes:jpg,png',
                 'videoFile'         => 'nullable|mimetypes:video/avi,video/mpeg,video/quicktime|max:10240',
-                'f_copiaruc'        => $this->requiredRuc . '|nullable|file|mimes:pdf,jpg,png',
+                'f_copiaruc'        => $this->requiredRuc . '|nullable|file|mimes:pdf',
                 'f_adicional1'      => 'nullable|file|mimes:pdf,jpg,png',
                 'f_adicional2'      => 'nullable|file|mimes:pdf',
                 'f_adicional3'      => 'nullable|file|mimes:pdf',
@@ -173,8 +172,8 @@ class NaturalPersonComponent extends Component
             ]);
         }
         
-        
-        $naturalPerson = new NaturalPerson;
+        $naturalPerson = new Signature;
+        $naturalPerson->tipo_solicitud = 1;
         $naturalPerson->nombres = Str::upper($this->nombres); //si
         $naturalPerson->apellido1 = Str::upper($this->apellido1); //si
         $naturalPerson->apellido2 = Str::upper($this->apellido2); //si
@@ -210,6 +209,7 @@ class NaturalPersonComponent extends Component
         
         $naturalPersonFile = new NaturalPersonFile;
         $naturalPersonFile->natural_person_id = $naturalPerson->id;
+        $naturalPersonFile->tipo_solicitud = 1;
         $naturalPersonFile->f_cedulaFront = $f_cedulaFront;
         $naturalPersonFile->f_cedulaBack = $f_cedulaBack;
         $naturalPersonFile->f_selfie = $f_selfie;

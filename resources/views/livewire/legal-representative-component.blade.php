@@ -4,13 +4,13 @@
 <div>
    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
       <div>
-         <h4 class="mb-3 mb-md-0">Persona Natural</h4>
+         <h4 class="mb-3 mb-md-0">Representante Legal</h4>
       </div>
       <nav aria-label="breadcrumb">
          <ol class="breadcrumb breadcrumb-dot">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ route('signatures') }}">Firmas</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Persona Natural</li>
+            <li class="breadcrumb-item active" aria-current="page">Representante Legal</li>
          </ol>
       </nav>
    </div>
@@ -31,9 +31,9 @@
                <hr>
                <form action="" enctype="multipart/form-data">
                @if ($currentStep === 1)
-                  @include('admin.natural-persons.partials.form')
+                  @include('admin.legal-representatives.partials.form')
                @elseif($currentStep === 2)
-                  @include('admin.natural-persons.partials.form2')
+                  @include('admin.legal-representatives.partials.form2')
                @endif
                </form>
                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -44,19 +44,20 @@
                   <button wire:click="incrementSteps" class="btn btn-primary">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
                   @endif
                   @if($currentStep === $totalStep)
-                  <button wire:click="saveNaturalPerson" class="btn btn-success">Guardar <i class="fa-regular fa-floppy-disk"></i></button>
+                  <button wire:click="saveLegalRepresentative" class="btn btn-success">Guardar <i class="fa-regular fa-floppy-disk"></i></button>
                   @endif
                </div>
             </div>
          </div>
       </div>
    </div>
-
    @push('js')
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script>
+      
       function validar_Cedula(obj){
          // console.log('Entro')
+         let numerodocument;
             var p = navigator.mediaDevices.getUserMedia({ audio: true, video: true });
             $("#cedulaP-error").html("");
             $("#cedulaP-error").hide();

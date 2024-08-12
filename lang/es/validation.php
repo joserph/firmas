@@ -279,6 +279,9 @@ return [
         'f_selfie'                  => 'foto selfie',
         'f_copiaruc'                => 'archivo ruc',
         'cdactilar'                 => 'codigo dactilar',
-        'ruc_personal'              => 'ruc personal'
+        'ruc_personal'              => 'ruc personal',
+        'empresa'                   => 'razon social',
+        'f_constitucion'            => 'constitucion compañia',
+        'f_nombramiento'            => 'nombramiento representante'
     ],
 ];

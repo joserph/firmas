@@ -48,7 +48,7 @@
                         <tr>
                            <th class="text-center"></th>
                            <th wire:click='doSort("validity")' class="text-center">
-                              <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Nombre' columnName='validity' />
+                              <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Vigencia' columnName='validity' />
                            </th>
                            <th wire:click='doSort("amount")' class="text-center">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Valor' columnName='amount' />
