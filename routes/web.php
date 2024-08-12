@@ -8,6 +8,7 @@ use App\Http\Controllers\BlogController;
 use App\Livewire\NaturalPersonComponent;
 use App\Livewire\PartnerComponent;
 use App\Livewire\PermissionComponent;
+use App\Livewire\PriceComponent;
 use App\Livewire\SignatureComponent;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,4 +39,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('signatures', SignatureComponent::class)->name('signatures');
     Route::get('natural-persons', NaturalPersonComponent::class)->name('natural-persons');
     Route::get('partners', PartnerComponent::class)->name('partners');
+    Route::get('prices', PriceComponent::class)->name('prices');
 });

@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
+
+            $table->string('validity');
+            $table->string('amount');
+            $table->string('type_price');
+            $table->date('start_date')->nullable();
+            $table->date('final_date')->nullable();
+            $table->string('promo_name')->nullable();
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

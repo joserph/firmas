@@ -45,6 +45,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url('prices') }}" class="nav-link">
+                    <i class="link-icon" data-feather="bold"></i>
+                    <span class="link-title">Precios</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('signatures') }}" class="nav-link">
                     <i class="link-icon" data-feather="bold"></i>
                     <span class="link-title">Firmas</span>

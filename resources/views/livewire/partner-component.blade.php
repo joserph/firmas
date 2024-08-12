@@ -1,9 +1,5 @@
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ asset('assets/css/iziToast.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets/vendors/select2/select2.min.css') }}"> --}}
-    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
-
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 @endpush
 <div>
    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
@@ -22,6 +18,19 @@
          <div class="card">
             <div class="card-header">
                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <input type="search" wire:model.live.debounce.300ms='search' class="form-control" name="" id="" placeholder="Buscar...">
+                  <div class="col-auto">
+                     <label for="inputPassword6" class="col-form-label">Paginacion</label>
+                  </div>
+                  <div class="col-auto col-sm-1">
+                     <select name="perPage" wire:model.live='perPage' id="perPage" class="form-select">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                     </select>
+                  </div>
                   <button type="button" class="btn btn-primary" wire:click='openCreateModal()' data-bs-toggle="tooltip" data-bs-placement="top" title="Crear">
                      <i class="fa-solid fa-circle-plus"></i>
                   </button>
@@ -63,7 +72,6 @@
                   </table>
                   {{ $partners->links() }}
                </div>
-               {{-- @livewire('partner-datatable') --}}
             </div>
          </div>
       </div>
@@ -91,7 +99,6 @@
 
    @push('js')
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      {{-- <script src="{{ asset('assets/js/iziToast.min.js') }}"></script> --}}
       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
       <script>
          $(document).ready(function(){
@@ -105,8 +112,6 @@
             toastr.success(event.detail[0].message);
          })
          window.addEventListener('delete', event => {
-            // console.log(event.detail);
-            // alert('algo');
             Swal.fire({
                title: "Esta seguro de eliminar el partner?",
                text: "No podrás revertir esto!",
@@ -118,7 +123,6 @@
                cancelButtonText: "Cancelar"
                }).then((result) => {
                if (result.isConfirmed) {
-                  // Livewire.dispatch('permission-component', 'delete', event.detail);
                   Livewire.dispatch('delete-partner', {id: event.detail});
                   Swal.fire({
                      title: "Emilinado!",
