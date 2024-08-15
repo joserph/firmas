@@ -143,39 +143,6 @@
       </div>
    </div><!-- Col -->
 </div>
-
-<div class="row">
-   {{-- <div class="col-sm-2">
-      <div class="form-group">
-         <label class="control-label"><span class="text-danger">*</span> Con RUC</label>
-         <br>
-         <div class="form-check form-check-inline">
-            <label class="form-check-label">
-               <input type="radio" class="form-check-input" wire:model="con_ruc" wire:click='sinRuc' id="optionsRadios5" value="NO">
-               NO
-            <i class="input-frame"></i></label>
-         </div>
-         <div class="form-check form-check-inline">
-            <label class="form-check-label">
-               <input type="radio" class="form-check-input" wire:model="con_ruc" wire:click='conRuc' id="optionsRadios6" value="SI">
-               SI
-            <i class="input-frame"></i></label>
-         </div>
-         @error('con_ruc')
-            <span class="text-danger"><small>{{ $message }}</small></span>
-         @enderror
-      </div>
-   </div> --}}
-   {{-- <div class="col-sm-4">
-      <div class="form-group">
-         <label class="control-label">Nro. de RUC</label>
-         <input type="text" class="form-control mb-2" minlength="13" maxlength="13" wire:model="ruc_personal" placeholder="17120083...001">
-         @error('ruc_personal')
-            <span class="text-danger"><small>{{ $message }}</small></span>
-         @enderror
-      </div>
-   </div> --}}
-</div>
 <hr>
 <div class="row">
    <div class="col-sm-12">
@@ -201,18 +168,84 @@
    </div>
    <div class="col-sm-3">
       <div class="form-group">
-         <label class="control-label"><span class="text-danger">*</span> Cargo del representante</label>
-         <input type="text" class="form-control text-uppercase mb-2" wire:model="cargo" placeholder="GERENTE GENERAL...">
-         @error('cargo')
+         <label class="control-label"><span class="text-danger">*</span> Area</label>
+         <input type="text" class="form-control text-uppercase mb-2" wire:model="unidad" placeholder="CONTABILIDAD...">
+         @error('unidad')
             <span class="text-danger"><small>{{ $message }}</small></span>
          @enderror
       </div>
    </div>   
+   <div class="col-sm-3">
+      <div class="form-group">
+         <label class="control-label"><span class="text-danger">*</span> Cargo del solicitante</label>
+         <input type="text" class="form-control text-uppercase mb-2" wire:model="cargo" placeholder="CONTADOR...">
+         @error('cargo')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div> 
 </div>
 <hr>
 <div class="row">
    <div class="col-sm-12">
-      <div class="lead">Dirección Domicilio</div>
+      <div class="lead">Representante Legal</div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3">
+      <div class="form-group">
+         <label class="control-label"><span class="text-danger">*</span> Tipo de Documento</label>
+         <select class="form-select text-uppercase mb-2" wire:model="tipodocumentoRL" id="tipodocumentoRL" required>
+            <option value="" selected="">Seleccione Documento</option>
+            <option value="CEDULA">CEDULA</option>
+            <option value="PASAPORTE">PASAPORTE</option>
+         </select>
+         @error('tipodocumentoRL')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="form-group">
+         <label class="control-label"><span class="text-danger">*</span> Nro. de Documento</label>
+         <input type="text" class="form-control text-uppercase mb-2" minlength="5" maxlength="20" onfocusout="validar_Cedula(this)" id="numerodocumentoRL" wire:model="numerodocumentoRL" placeholder="17120083..." required>
+         @error('numerodocumentoRL')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div> 
+   <div class="col-sm-5">
+      <div class="form-group">
+         <label class="control-label"><span class="text-danger">*</span> Nombres</label>
+         <input type="text" class="form-control text-uppercase mb-2" id="nombresRL" wire:model="nombresRL" placeholder="Ana María..." required>
+         @error('nombresRL')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="form-group">
+         <label class="control-label"><span class="text-danger">*</span> 1er Apellido</label>
+         <input type="text" class="form-control text-uppercase mb-2" id="apellido1RL" wire:model="apellido1RL" placeholder="SAENZ" required>
+         @error('apellido1RL')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="form-group">
+         <label class="control-label">2do Apellido</label>
+         <input type="text" class="form-control text-uppercase mb-2" id="apellido2RL" wire:model="apellido2RL" placeholder="MIÑO">
+         @error('apellido2RL')
+            <span class="text-danger"><small>{{ $message }}</small></span>
+         @enderror
+      </div>
+   </div>
+</div>
+<hr>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="lead">Dirección de la empresa <small>(especificada en el ruc)</small></div>
    </div>
 </div>
 <div class="row">
@@ -285,12 +318,6 @@
                @foreach ($validities as $item)
                <option value="{{ $item }}">{{ $item }}</option>
                @endforeach
-               {{-- <option value="7 días">7 días</option>
-               <option value="30 días">30 días</option>
-               <option value="1 año">1 año</option>
-               <option value="2 años">2 años</option>
-               <option value="3 años">3 años</option>
-               <option value="4 años">4 años</option> --}}
             </select>
             @error('vigenciafirma')
                <span class="text-danger"><small>{{ $message }}</small></span>

@@ -72,7 +72,7 @@ class NaturalPersonComponent extends Component
     {
         if($this->currentStep === 1)
         {
-            // $this->validateForm();
+            $this->validateForm();
             $this->currentStep++;
             $this->headerButton = 'light';
             $this->headerText = 'dark';

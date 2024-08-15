@@ -26,6 +26,8 @@ return new class extends Migration
             $table->longText('f_constitucion')->nullable()->charset('binary');
             $table->longText('f_nombramiento')->nullable()->charset('binary');
             $table->longText('f_nombramiento2')->nullable()->charset('binary');
+            $table->longText('f_documentoRL')->nullable()->charset('binary');
+            $table->longText('f_autreprelegal')->nullable()->charset('binary');
 
             $table->timestamps();
         });

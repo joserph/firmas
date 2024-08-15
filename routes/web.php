@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlogController;
+use App\Livewire\CompanyMemberComponent;
 use App\Livewire\LegalRepresentativeComponent;
 use App\Livewire\NaturalPersonComponent;
 use App\Livewire\PartnerComponent;
@@ -42,4 +43,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('partners', PartnerComponent::class)->name('partners');
     Route::get('prices', PriceComponent::class)->name('prices');
     Route::get('legal-representatives', LegalRepresentativeComponent::class)->name('legal-representatives');
+    Route::get('company-members', CompanyMemberComponent::class)->name('company-members');
 });

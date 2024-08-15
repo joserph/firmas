@@ -282,6 +282,13 @@ return [
         'ruc_personal'              => 'ruc personal',
         'empresa'                   => 'razon social',
         'f_constitucion'            => 'constitucion compañia',
-        'f_nombramiento'            => 'nombramiento representante'
+        'f_nombramiento'            => 'nombramiento representante',
+        'unidad'                    => 'area',
+        'tipodocumentoRL'           => 'tipo documento',
+        'numerodocumentoRL'         => 'numero de documento',
+        'nombresRL'                 => 'nombres',
+        'apellido1RL'               => 'primer apellido',
+        'f_documentoRL'             => 'numero de documento',
+        'f_autreprelegal'           => 'autorizacion del representante'
     ],
 ];

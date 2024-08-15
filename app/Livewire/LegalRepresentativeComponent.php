@@ -42,7 +42,6 @@ class LegalRepresentativeComponent extends Component
         if($this->currentStep === 1)
         {
             $this->validateForm();
-            // dd('aqui');
             $this->currentStep++;
             $this->headerButton = 'light';
             $this->headerText = 'dark';

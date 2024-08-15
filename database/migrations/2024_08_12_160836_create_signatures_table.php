@@ -39,6 +39,12 @@ return new class extends Migration
          $table->string('ruc')->nullable();
          $table->string('empresa')->nullable();
          $table->string('cargo')->nullable();
+         $table->string('unidad')->nullable();
+         $table->string('tipodocumentoRL')->nullable();
+         $table->string('numerodocumentoRL')->nullable();
+         $table->string('nombresRL')->nullable();
+         $table->string('apellido1RL')->nullable();
+         $table->string('apellido2RL')->nullable();
 
          $table->timestamps();
       });
