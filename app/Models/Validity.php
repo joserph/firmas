@@ -18,6 +18,7 @@ class Validity extends Model
             '2 años'    => __('2 años'),
             '3 años'    => __('3 años'),
             '4 años'    => __('4 años'),
+            '5 años'    => __('5 años'),
         ];
     }
 

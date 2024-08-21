@@ -10,6 +10,8 @@ class Signature extends Model
     use HasFactory;
 
     protected $fillable = [
+        'creacion',
+        'tipo_solicitud',
         'tipodocumento',
         'numerodocumento',
         'nombres',
@@ -34,5 +36,11 @@ class Signature extends Model
         'ruc',
         'empresa',
         'cargo',
+        'unidad',
+        'aprobacion',
+        'estado',
+        'datos',
+        'documentos',
+        'user_id'
     ];
 }

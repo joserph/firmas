@@ -7,6 +7,7 @@ use App\Models\Nationalities;
 use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
@@ -190,6 +191,8 @@ class CompanyMemberComponent extends Component
             $companyMember->nombresRL = $this->nombresRL; //si
             $companyMember->apellido1RL = $this->apellido1RL; //si
             $companyMember->apellido2RL = $this->apellido2RL; //si
+            $companyMember->estado = 'EN VALIDACION';
+            $companyMember->user_id = Auth::user()->id;
 
             $companyMember->save();
 

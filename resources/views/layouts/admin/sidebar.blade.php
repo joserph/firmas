@@ -57,6 +57,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url('consolidations') }}" class="nav-link">
+                    <i class="link-icon" data-feather="cpu"></i>
+                    <span class="link-title">Consolidacion</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('natural-persons') }}" class="nav-link">
                     <i class="link-icon" data-feather="git-branch"></i>
                     <span class="link-title">Persona Natural</span>

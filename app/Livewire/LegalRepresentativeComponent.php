@@ -7,6 +7,7 @@ use App\Models\Nationalities;
 use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Illuminate\Support\Str;
@@ -196,7 +197,8 @@ class LegalRepresentativeComponent extends Component
         $legalRepresentative->ruc = $this->ruc; //si
         $legalRepresentative->empresa = $this->empresa; //si
         $legalRepresentative->cargo = $this->cargo; //si
-
+        $legalRepresentative->estado = 'EN VALIDACION';
+        $legalRepresentative->user_id = Auth::user()->id;
         $legalRepresentative->save();
 
         // Convert to Base64

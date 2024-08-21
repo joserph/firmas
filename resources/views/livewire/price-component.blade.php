@@ -76,7 +76,7 @@
                               <input class="form-check-input" wire:model='selected' type="checkbox" value="{{ $item->id }}" id="">
                            </td>
                            <td class="text-center align-middle">{{ Str::upper($item->validity) }}</td>
-                           <td class="text-center align-middle">{{ number_format($item->amount, 2, '.', '') }}</td>
+                           <td class="text-center align-middle">$ {{ number_format($item->amount, 2, '.', '') }}</td>
                            <td class="text-center align-middle">{{ $item->type_price }}</td>
                            <td class="text-center align-middle">
                               @if($item->start_date)

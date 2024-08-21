@@ -15,7 +15,7 @@ class PriceComponent extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $modal = false, $validities, $disabledStarDate = 'disabled', $disabledFinalDate = 'disabled', $myPrice = null;
-    public $validity, $amount, $type_price, $start_date, $final_date, $promo_name, $id;
+    public $validity, $amount, $type_price, $start_date, $final_date, $promo_name, $id, $typePrices;
     public $search = '', $perPage = 10, $sortDirection = 'DESC', $sortColumn = 'id', $selected = [];
 
     public function doSort($column)
@@ -64,6 +64,7 @@ class PriceComponent extends Component
     public function mount()
     {
         $this->validities = Validity::getValidityAll();
+        $this->typePrices = Price::getTypePrice();
     }
     public function render()
     {
@@ -121,6 +122,9 @@ class PriceComponent extends Component
             $this->disabledStarDate = 'disabled';
             $this->disabledFinalDate = 'disabled';
         }elseif($value === 'PROMO'){
+            $this->disabledStarDate = '';
+            $this->disabledFinalDate = '';
+        }elseif($value === 'UANATACA'){
             $this->disabledStarDate = '';
             $this->disabledFinalDate = '';
         }

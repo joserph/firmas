@@ -27,9 +27,9 @@
          <label for="type_price">Tipo de precio</label>
          <select name="type_price" id="type_price" wire:model.live='type_price' class="form-select @error('type_price') is-invalid @enderror" required>
             <option value="">Seleccione tipo</option>
-            <option value="NORMAL">NORMAL</option>
-            <option value="PREFERENCIAL">PREFERENCIAL</option>
-            <option value="PROMO">PROMO</option>
+            @foreach ($typePrices as $item)
+            <option value="{{ $item }}">{{ $item }}</option>
+            @endforeach
          </select>
          @error('type_price')
             <span class="text-danger">{{ $message }}</span>

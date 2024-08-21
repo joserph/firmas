@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('validity');
-            $table->string('amount');
+            $table->decimal('amount');
             $table->string('type_price');
             $table->date('start_date')->nullable();
             $table->date('final_date')->nullable();

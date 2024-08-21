@@ -29,4 +29,14 @@ class Price extends Model
                 ->orWhere('final_date', 'like', '%'.$search.'%')
                 ->orWhere('promo_name', 'like', '%'.$search.'%');
     }
+
+    public static function getTypePrice()
+    {
+        return [
+            'NORMAL'        => __('NORMAL'),
+            'PREFERENCIAL'  => __('PREFERENCIAL'),
+            'PROMO'         => __('PROMO'),
+            'UANATACA'      => __('UANATACA'),
+        ];
+    }
 }

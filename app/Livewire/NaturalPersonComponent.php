@@ -2,12 +2,16 @@
 
 namespace App\Livewire;
 
+use App\Imports\SignatureImport;
 use App\Models\Geography;
 use App\Models\Nationalities;
 use App\Models\NaturalPerson;
 use App\Models\NaturalPersonFile;
 use App\Models\Signature;
+use App\Models\SignatureFile;
 use App\Models\Validity;
+use Illuminate\Support\Facades\Auth;
+// use DragonCode\Contracts\Cashier\Auth\Auth;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
@@ -173,6 +177,7 @@ class NaturalPersonComponent extends Component
         }
         
         $naturalPerson = new Signature;
+        $naturalPerson->creacion = date('Y-m-d h:i:s');
         $naturalPerson->tipo_solicitud = 1;
         $naturalPerson->nombres = Str::upper($this->nombres); //si
         $naturalPerson->apellido1 = Str::upper($this->apellido1); //si
@@ -197,6 +202,8 @@ class NaturalPersonComponent extends Component
         $naturalPerson->formato = $this->formato;//si
         $naturalPerson->vigenciafirma = $this->vigenciafirma;//si
         $naturalPerson->token = $this->token;//si
+        $naturalPerson->estado = 'EN VALIDACION';
+        $naturalPerson->user_id = Auth::user()->id;
         $naturalPerson->save();
 
         // Convert to Base64
@@ -207,8 +214,8 @@ class NaturalPersonComponent extends Component
         $f_copiaruc = ($this->f_copiaruc) ? base64_encode(file_get_contents($this->f_copiaruc->getRealPath())) : NULL;
         $f_adicional1 = ($this->f_adicional1) ? base64_encode(file_get_contents($this->f_adicional1->getRealPath())) : NULL;
         
-        $naturalPersonFile = new NaturalPersonFile;
-        $naturalPersonFile->natural_person_id = $naturalPerson->id;
+        $naturalPersonFile = new SignatureFile;
+        $naturalPersonFile->signature_id = $naturalPerson->id;
         $naturalPersonFile->tipo_solicitud = 1;
         $naturalPersonFile->f_cedulaFront = $f_cedulaFront;
         $naturalPersonFile->f_cedulaBack = $f_cedulaBack;
