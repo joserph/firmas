@@ -39,6 +39,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url('statistics') }}" class="nav-link">
+                    <i class="link-icon" data-feather="activity"></i>
+                    <span class="link-title">Estadisticas</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('partners') }}" class="nav-link">
                     <i class="link-icon" data-feather="slack"></i>
                     <span class="link-title">Partners</span>

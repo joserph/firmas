@@ -70,7 +70,7 @@
                            <th wire:click='doSort("vigenciafirma")' class="text-center">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Vigencia' columnName='vigenciafirma' />
                            </th>
-                           <th wire:click='doSort("estado")' class="text-center">
+                           <th wire:click='doSort("estado")' class="text-center" style="min-width: 210px">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Estado' columnName='estado' />
                            </th>
                         </tr>
@@ -78,13 +78,21 @@
                      <tbody>
                         @foreach ($signatures as $item)
                         <tr>
-                           <td class="text-center align-middle">{{ $item->numerodocumento }}</td>
-                           <td class="text-center align-middle">{{ $item->ruc }}</td>
-                           <td class="text-center align-middle">{{ $item->creacion }}</td>
-                           <td class="text-center align-middle">{{ $item->nombres }}</td>
-                           <td class="text-center align-middle">{{ $item->tipo_solicitud }}</td>
-                           <td class="text-center align-middle">{{ $item->vigenciafirma }}</td>
-                           <td class="text-center align-middle">{{ $item->estado }}</td>
+                           <td class="text-center align-middle"><small>{{ $item->numerodocumento }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->ruc }}</small></td>
+                           <td class="text-center align-middle"><small>{{ date('d-m-Y', strtotime($item->creacion)) }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->nombres }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->tipo_solicitud }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->vigenciafirma }}</small></td>
+                           <td class="text-center align-middle">
+                              <select wire:change='changeInputSelect({{ $item->id }}, $event.target.value, $event.target.name)' name="estado" class="form-select form-select-sm" >
+                                 <option value="NULL">-</option>
+                                 @foreach ($stateSignatures as $stateSignature)
+                                 <option value="{{ $stateSignature }}" {{ ($stateSignature === $item->estado) ? 'selected' : '' }}>{{ $stateSignature }}</option>
+                                 @endforeach
+                              </select>
+                              {{-- {{ $item->estado }} --}}
+                           </td>
                         </tr>
                         @endforeach
                      </tbody>
@@ -99,26 +107,6 @@
       </div>
    </div>
    
-   {{-- @if ($modal)
-      <div class="modal fade show" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog" style="display:block">
-         <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-               <h1 class="modal-title fs-5" id="exampleModalLabel">{{ isset($myPartner) ? 'Editar' : 'Crear'}} partner</h1>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" wire:click='closeCreateModal' aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-               @include('admin.partners.partials.form')
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" wire:click='closeCreateModal'><i class="fa-solid fa-xmark"></i> Cerrar</button>
-               <button type="button" class="btn {{ isset($myPartner) ? 'btn-outline-warning' : 'btn-outline-primary'}}" wire:click='savePartner'><i class="{{ isset($myPartner) ? 'fa-solid fa-rotate' : 'fa-regular fa-floppy-disk'}}"></i> {{ isset($myPartner) ? 'Actualizar' : 'Guardar'}}</button>
-            </div>
-            </div>
-         </div>
-      </div>
-   @endif --}}
-
    @push('js')
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

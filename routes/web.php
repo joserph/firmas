@@ -13,6 +13,7 @@ use App\Livewire\PartnerComponent;
 use App\Livewire\PermissionComponent;
 use App\Livewire\PriceComponent;
 use App\Livewire\SignatureComponent;
+use App\Livewire\StatisticsComponent;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -46,4 +47,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('company-members', CompanyMemberComponent::class)->name('company-members');
     Route::post('import-signatures', [ImportController::class, 'importSignatures'])->name('import-signatures');
     Route::get('consolidations', ConsolidationComponent::class)->name('consolidations');
+    Route::get('statistics', StatisticsComponent::class)->name('statistics');
 });

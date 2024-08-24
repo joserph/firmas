@@ -33,17 +33,6 @@
                         <option value="100">100</option>
                      </select>
                   </div>
-                  {{-- <form action="{{ route('import-consolidations') }}" class="row g-3" method="POST" enctype="multipart/form-data">
-                     @csrf
-                     <div class="col-auto">
-                        <input type="file" class="form-control" name="importSignature" id="">
-                     </div>
-                     <div class="col-auto col-sm-1">
-                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir">
-                           <i class="fa-solid fa-file-arrow-up"></i>
-                        </button>
-                     </div>
-                  </form> --}}
                </div>
             </div>
             <div class="card-body">
@@ -118,8 +107,6 @@
                            <th wire:click='doSort("nota")' class="text-center" style="min-width: 255px">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Nota' columnName='nota' />
                            </th>
-                           
-                           {{-- <th class="text-center">Acciones</th> --}}
                         </tr>
                      </thead>
                      <tbody>
@@ -129,9 +116,7 @@
                            <td class="text-center align-middle">
                               <input class="form-check-input" type="checkbox" name="en_uanataca" wire:change='changeInputCheckbox({{ $item->id }}, $event.target.value, $event.target.name)' value="{{($item->en_uanataca === 1) ? 1 : 0 }}" {{ ($item->en_uanataca === 1) ? 'checked' : '' }}>
                            </td>
-                           {{-- <td class="text-center align-middle">{{ $item->signature->creacion }}</td> --}}
                            <td class="text-center align-middle"><small>{{ $item->signature->nombres }}</small></td>
-                           {{-- <td class="text-center align-middle">{{ $item->tipo_solicitud }}</td> --}}
                            <td class="text-center align-middle"><small>{{ $item->signature->vigenciafirma }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->signature->estado }}</small></td>
                            <td class="text-center align-middle">
@@ -211,22 +196,6 @@
                            <td class="text-center align-middle">
                               <input type="text" class="form-control form-control-sm" name="nota" value="{{ $item->nota }}" wire:blur='changeInput({{ $item->id }}, $event.target.value, $event.target.name)'>
                            </td>
-                           {{-- <td class="text-center align-middle">
-                              @if ($item->preferential_price == 1)
-                                 <i class="fa-regular fa-circle-check text-success"></i>
-                              @else
-                                 <i class="fa-regular fa-circle-xmark text-danger"></i>
-                              @endif
-                           </td> --}}
-                           {{-- <td class="text-center">
-                              <button wire:click="openCreateModal({{$item->id}})" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="btn btn-icon btn-outline-warning btn-xs">
-                                 <i class="fa-regular fa-pen-to-square"></i>
-                              </button>
-                              
-                              <button class="btn btn-icon btn-outline-danger btn-xs" wire:click='$dispatch("delete", {{$item->id}})' data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                 <i class="fa-solid fa-trash"></i>
-                              </button>
-                           </td> --}}
                         </tr>
                         @endforeach
                      </tbody>
@@ -241,26 +210,6 @@
       </div>
    </div>
    
-   {{-- @if ($modal)
-      <div class="modal fade show" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog" style="display:block">
-         <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-               <h1 class="modal-title fs-5" id="exampleModalLabel">{{ isset($myPartner) ? 'Editar' : 'Crear'}} partner</h1>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" wire:click='closeCreateModal' aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-               @include('admin.partners.partials.form')
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" wire:click='closeCreateModal'><i class="fa-solid fa-xmark"></i> Cerrar</button>
-               <button type="button" class="btn {{ isset($myPartner) ? 'btn-outline-warning' : 'btn-outline-primary'}}" wire:click='savePartner'><i class="{{ isset($myPartner) ? 'fa-solid fa-rotate' : 'fa-regular fa-floppy-disk'}}"></i> {{ isset($myPartner) ? 'Actualizar' : 'Guardar'}}</button>
-            </div>
-            </div>
-         </div>
-      </div>
-   @endif --}}
-
    @push('js')
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

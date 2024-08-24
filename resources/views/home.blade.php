@@ -136,6 +136,40 @@
                 </div>
             </div>
             </div>
+
+            {{-- My chart --}}
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+              
+              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+              
+              <script>
+                const ctx = document.getElementById('myChart');
+              
+                new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                      label: 'My First Dataset',
+                      data: [12, 19, 3, 5, 2, 3],
+                      borderWidth: 2,
+                      borderColor: '#9FC131',
+                      backgroundColor: '#9BD0F5',
+                      tension: 0.4
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+              </script>
+              
         </div>
     </div> <!-- row -->
 
