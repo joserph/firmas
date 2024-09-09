@@ -226,4 +226,18 @@
         }
    </script>
    @endpush
+   @script
+   <script>
+      $(document).ready(function() {
+         $('#partner').select2();
+         $('#partner').on('change', function(){
+            // alert(this.value)
+            @this.set('partner', this.value)
+         });
+      });
+      $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+      });
+   </script>
+   @endscript
 </div>

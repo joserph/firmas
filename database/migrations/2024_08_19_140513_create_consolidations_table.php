@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('consolidations', function (Blueprint $table) {
             $table->id();
 
+            $table->dateTime('creacion_signature')->nullable();
             $table->foreignIdFor(Signature::class);
             $table->foreignIdFor(Partner::class)->nullable();
-            $table->boolean('penalidad')->nullable();
+            $table->decimal('penalidad')->nullable();
             $table->decimal('monto_pagado')->nullable();
             $table->decimal('monto_uanataca')->nullable();
-            $table->decimal('ganancia')->storedAs('monto_pagado - monto_uanataca')->nullable();
+            $table->decimal('ganancia')->storedAs('(penalidad + monto_pagado) - monto_uanataca')->nullable();
             $table->string('saldo')->nullable();
             $table->string('consolidado_banco')->nullable();
             $table->string('estado_pago')->nullable();

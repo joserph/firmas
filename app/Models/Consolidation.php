@@ -10,6 +10,7 @@ class Consolidation extends Model
     use HasFactory;
 
     protected $fillable = [
+        'creacion_signature',
         'signature_id',
         'partner_id',
         'penalidad',

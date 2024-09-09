@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Consolidation;
 use App\Models\Geography;
 use App\Models\Nationalities;
+use App\Models\Partner;
+use App\Models\Price;
 use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
@@ -22,7 +25,7 @@ class LegalRepresentativeComponent extends Component
     public $sexo, $fecha_nacimiento, $nacionalidad = 'ECUATORIANA', $telfCelular, $telfFijo, $eMail, $provincia, $ciudad, $direccion, $vigenciafirma;
     public $f_cedulaFront, $f_cedulaBack, $f_selfie, $f_copiaruc, $f_adicional1, $f_adicional2, $f_adicional3, $f_adicional4;
     public $cdactilar, $telfCelular2, $eMail2, $ConRuc, $formato, $requiredCodigoDactilar, $videoFile, $f_nombramiento, $f_constitucion;
-    public $token, $displayVideo = 'none', $aditional1Extension, $ruc, $empresa, $cargo, $f_nombramiento2;
+    public $token, $displayVideo = 'none', $aditional1Extension, $ruc, $empresa, $cargo, $f_nombramiento2, $formats, $partners, $partner;
 
     public function render()
     {
@@ -36,6 +39,8 @@ class LegalRepresentativeComponent extends Component
         $this->provinces = array_unique($provincesAll, SORT_REGULAR);
         $this->cantons = collect();
         $this->validities = Validity::getValidityAll();
+        $this->formats = Signature::getContainer();
+        $this->partners = Partner::orderBy('name', 'ASC')->get();
     }
 
     public function incrementSteps()
@@ -80,17 +85,17 @@ class LegalRepresentativeComponent extends Component
 
     public function changeFormat()
     {
-        if($this->formato === 'TOKEN')
+        if($this->formato === '1')
         {
             $this->displayToken = 'block';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'COMBO p12+nube'){
+        }elseif($this->formato === '3'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'ARCHIVO'){
+        }elseif($this->formato === '0'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'EN NUBE'){
+        }elseif($this->formato === '2'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
         }
@@ -125,7 +130,8 @@ class LegalRepresentativeComponent extends Component
                 'token'             => 'nullable|max:50',
                 'ruc'               => 'required|numeric|min_digits:13|max_digits:13',
                 'empresa'           => 'required',
-                'cargo'             => 'required'
+                'cargo'             => 'required',
+                'partner'           => 'required'
             ]);
         }
     }
@@ -169,6 +175,7 @@ class LegalRepresentativeComponent extends Component
         }
 
         $legalRepresentative = new Signature;
+        $legalRepresentative->creacion = date('Y-m-d h:i:s');
         $legalRepresentative->tipo_solicitud = 2;
         $legalRepresentative->nombres = Str::upper($this->nombres); //si
         $legalRepresentative->apellido1 = Str::upper($this->apellido1); //si
@@ -197,7 +204,7 @@ class LegalRepresentativeComponent extends Component
         $legalRepresentative->ruc = $this->ruc; //si
         $legalRepresentative->empresa = $this->empresa; //si
         $legalRepresentative->cargo = $this->cargo; //si
-        $legalRepresentative->estado = 'EN VALIDACION';
+        $legalRepresentative->estado = 'SIN ENVIAR';
         $legalRepresentative->user_id = Auth::user()->id;
         $legalRepresentative->save();
 
@@ -227,6 +234,21 @@ class LegalRepresentativeComponent extends Component
         $legalRepresentativeFile->f_nombramiento = $f_nombramiento;
         $legalRepresentativeFile->f_nombramiento2 = $f_nombramiento2;
         $legalRepresentativeFile->save();
+        // Data for Consolidation
+        $consolidation = new Consolidation;
+        $consolidation->creacion_signature = $legalRepresentative->creacion;
+        $consolidation->signature_id = $legalRepresentative->id;
+        $consolidation->partner_id = $this->partner;
+        $consolidation->consolidado_banco = 'PENDIENTE';
+        $consolidation->estado_pago = 'PENDIENTE';
+        $consolidation->penalidad = 0;
+        // Price Signature
+        $price_signature = Price::getPriceSignature($legalRepresentative->vigenciafirma, $this->partner);
+        // Price Uanataca
+        $price_uanataca = Price::getPriceUanataca($legalRepresentative->vigenciafirma);
+        $consolidation->monto_pagado = $price_signature->amount;
+        $consolidation->monto_uanataca = $price_uanataca->amount;
+        $consolidation->save();
 
         return redirect()->route('signatures');
     }

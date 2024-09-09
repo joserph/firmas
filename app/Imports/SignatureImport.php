@@ -22,7 +22,6 @@ class SignatureImport implements WithHeadingRow, ToCollection
     {
         foreach ($rows as $row) 
         {
-            
             // Format Date
             $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fecha']);
             // Validated Cedula or RUC
@@ -37,11 +36,18 @@ class SignatureImport implements WithHeadingRow, ToCollection
                 // Company
                 $empresa_ = strstr($row['nombre'], '[', true);
                 $empresa = rtrim($empresa_);
+                if($row['tipo_firma'] === 'REPRESENTANTE LEGAL')
+                {
+                    $tipo_firma = 2;
+                }else{
+                    $tipo_firma = 3;
+                }
             }else{
                 $ruc = NULL;
                 $cedula = $row['id'];
                 $nombre = $row['nombre'];
                 $empresa = NULL;
+                $tipo_firma = 1;
             }
 
             if(strlen($cedula) === 10)
@@ -55,7 +61,7 @@ class SignatureImport implements WithHeadingRow, ToCollection
 
             $signature = Signature::create([
                 'creacion'          => $date->format('Y-m-d h:i:s'),
-                'tipo_solicitud'    => $row['tipo_firma'],
+                'tipo_solicitud'    => $tipo_firma,
                 'numerodocumento'   => $cedula,
                 'nombres'           => $nombre,
                 'datos'             => $row['datos'],
@@ -74,11 +80,15 @@ class SignatureImport implements WithHeadingRow, ToCollection
             // Price Uanataca
             $price_aunataca = Price::where('validity', $row['vigencia'])->where('type_price', 'UANATACA')->select('amount')->first();
             // dd($price_aunataca->amount);
-
+            // dd($signature->creacion);
             Consolidation::create([
-                'signature_id'      => $signature->id,
-                'monto_pagado'      => $price_signature->amount,
-                'monto_uanataca'    => $price_aunataca->amount
+                'creacion_signature'    => $signature->creacion,
+                'signature_id'          => $signature->id,
+                'monto_pagado'          => $price_signature->amount,
+                'monto_uanataca'        => $price_aunataca->amount,
+                'consolidado_banco'     => 'PENDIENTE',
+                'estado_pago'           => 'PENDIENTE',
+                'penalidad'             => 0
             ]);
         }
         

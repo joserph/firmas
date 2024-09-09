@@ -21,4 +21,16 @@ class Partner extends Model
         return empty($search) ? static::query()
             : static::where('name', 'like', '%'.$search.'%');
     }
+
+    public static function typePricePreferencial($partner_id)
+    {
+        $type_price = Partner::where('id', $partner_id)->select('preferential_price')->first();
+        if($type_price->preferential_price === 1)
+        {
+            $type_p = 'PREFERENCIAL';
+        }else{
+            $type_p = 'NORMAL';
+        }
+        return $type_p;
+    }
 }

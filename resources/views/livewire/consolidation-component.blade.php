@@ -18,6 +18,29 @@
          <div class="card">
             <div class="card-header">
                <div class="d-grid gap-2 d-md-flex">
+                  <div class="col-auto">
+                     <label for="" class="col-form-label">Año</label>
+                  </div>
+                  <div class="col-auto col-sm-1">
+                     <select name="perYear" wire:model.live='perYear' id="perYear" class="form-select">
+                        @foreach ($years as $year)
+                           <option value="{{ $year }}" {{ ($perYear === $year) ? 'selected' : '' }}>{{ $year }}</option>
+                        @endforeach
+                     </select>
+                  </div>
+                  <div class="col-auto">
+                     <label for="" class="col-form-label">Mes</label>
+                  </div>
+                  @php
+                     $mes = date('n');
+                  @endphp
+                  <div class="col-auto col-sm-2">
+                     <select name="perMonth" wire:model.live='perMonth' id="perMonth" class="form-select">
+                        @foreach ($months as $key => $month)
+                           <option value="{{ $key }}" {{ ($perMonth === $key) ? 'selected' : '' }}>{{ $month }}</option>
+                        @endforeach
+                     </select>
+                  </div>
                   <div class="col-auto col-sm-5">
                      <input type="search" wire:model.live.debounce.300ms='search' class="form-control" name="" id="" placeholder="Buscar...">
                   </div>
@@ -41,6 +64,9 @@
                   <table class="table table-sm table-hover">
                      <thead>
                         <tr>
+                           <th wire:click='doSort("creacion")' class="text-center">
+                              <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Fecha' columnName='creacion' />
+                           </th>
                            <th wire:click='doSort("numerodocumento")' class="text-center">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Cedula' columnName='numerodocumento' />
                            </th>
@@ -112,11 +138,12 @@
                      <tbody>
                         @foreach ($consolidations as $item)
                         <tr>
+                           <td class="text-center align-middle"><small>{{ date('d-m-Y', strtotime($item->signature->creacion)) }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->signature->numerodocumento }}</small></td>
                            <td class="text-center align-middle">
                               <input class="form-check-input" type="checkbox" name="en_uanataca" wire:change='changeInputCheckbox({{ $item->id }}, $event.target.value, $event.target.name)' value="{{($item->en_uanataca === 1) ? 1 : 0 }}" {{ ($item->en_uanataca === 1) ? 'checked' : '' }}>
                            </td>
-                           <td class="text-center align-middle"><small>{{ $item->signature->nombres }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->signature->nombres }} {{ $item->signature->apellido1 }} {{ $item->signature->apellido2 }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->signature->vigenciafirma }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->signature->estado }}</small></td>
                            <td class="text-center align-middle">
@@ -128,7 +155,13 @@
                               </select>
                            </td>
                            <td class="text-center align-middle">
-                              <input class="form-check-input" type="checkbox" name="penalidad" wire:change='changeInputCheckbox({{ $item->id }}, $event.target.value, $event.target.name)' value="{{($item->penalidad === 1) ? 1 : 0 }}" {{ ($item->penalidad === 1) ? 'checked' : '' }}>
+                              <select wire:change='changeInputSelect({{ $item->id }}, $event.target.value, $event.target.name)' name="penalidad" id="" class="form-select form-select-sm">
+                                 <option value="NULL">-</option>
+                                 @foreach ($penalties as $penaltiy)
+                                 <option value="{{ $penaltiy }}" {{ ($item->penalidad === $penaltiy) ? 'selected' : '' }}>{{ $penaltiy }}</option>
+                                 @endforeach
+                              </select>
+                              {{-- <input class="form-check-input" type="checkbox" name="penalidad" wire:change='changeInputCheckbox({{ $item->id }}, $event.target.value, $event.target.name)' value="{{($item->penalidad === 1) ? 1 : 0 }}" {{ ($item->penalidad === 1) ? 'checked' : '' }}> --}}
                            </td>
                            <td class="text-center align-middle">
                               <div class="input-group input-group-sm">

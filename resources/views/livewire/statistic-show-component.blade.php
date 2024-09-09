@@ -4,32 +4,14 @@
 <div>
    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
       <div>
-         <h4 class="mb-3 mb-md-0">Estadisticas</h4>
+         <h4 class="mb-3 mb-md-0">Estadisticas de {{ $partner->name }}</h4>
       </div>
       <nav aria-label="breadcrumb">
          <ol class="breadcrumb breadcrumb-dot">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Estadisticas</li>
+            <li class="breadcrumb-item active" aria-current="page">Estadisticas de {{ $partner->name }}</li>
          </ol>
       </nav>
-   </div>
-   <div class="row">
-      <div class="col-md-12 stretch-card">
-         <div class="card">
-            <div class="col-md-4 grid-margin stretch-card">
-               <div class="card">
-                  <div class="card-body">
-                     <div wire:ignore>
-                        <canvas id="myChart"></canvas>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-4">
-               
-            </div>
-         </div>
-      </div>
    </div>
    <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
@@ -40,7 +22,7 @@
                      <label for="inputPassword6" class="col-form-label">Año</label>
                   </div>
                   <div class="col-auto col-sm-1">
-                     <select name="perYear" wire:model.live='perYear' id="perYear" class="form-select">
+                     <select name="perYear" wire:model.live='perYear' id="perYear" class="form-select form-select-sm">
                         @foreach ($years as $year)
                            <option value="{{ $year }}" {{ ($perYear === $year) ? 'selected' : '' }}>{{ $year }}</option>
                         @endforeach
@@ -53,9 +35,17 @@
                      $mes = date('n');
                   @endphp
                   <div class="col-auto col-sm-2">
-                     <select name="perMonth" wire:model.live='perMonth' id="perMonth" class="form-select">
+                     <select name="perMonth" wire:model.live='perMonth' id="perMonth" class="form-select form-select-sm">
                         @foreach ($months as $key => $month)
                            <option value="{{ $key }}" {{ ($perMonth === $key) ? 'selected' : '' }}>{{ $month }}</option>
+                        @endforeach
+                     </select>
+                  </div>
+                  <div class="col-auto col-sm-2">
+                     <select wire:model.live='paymentStatus' name="estado_pago" class="form-select form-select-sm">
+                        <option value="NULL">-</option>
+                        @foreach ($payment_status as $payment_statu)
+                        <option value="{{ $payment_statu }}" {{ ($paymentStatus === $payment_statu) ? 'selected' : '' }}>{{ $payment_statu }}</option>
                         @endforeach
                      </select>
                   </div>
@@ -79,23 +69,82 @@
                      </thead>
                      <tbody>
                         <tr>
-                           <td class="">Cantidades</td>
+                           <td class="">CANTIDADES</td>
                            <td class="text-center">{{ $totals }}</td>
                            @foreach ($counts as $item)
                               <td class="text-center">{{ $item }}</td>
                            @endforeach
                         </tr>
                         <tr>
-                           <td class="">Ganancias</td>
-                           <td class="text-center">$ {{ $totalsEarnings->sum('consolidations_sum_ganancia') }}</td>
+                           <td class="">{{ $this->paymentStatus }}</td>
+                           <td class="text-center">$ {{ number_format($debtsTotal, 2, '.', '') }}</td>
                            @foreach ($earnings as $item)
-                              <td class="text-center">$ {{ number_format($item->sum('consolidations_sum_ganancia'), 2, '.', '') }}</td>
+                              <td class="text-center">$ {{ number_format($item, 2, '.', '') }}</td>
                            @endforeach
                         </tr>
                      </tbody>
                   </table>
                   <hr>
                   <table class="table table-hover table-sm">
+                     <thead>
+                        <tr>
+                           <th class="text-center">CEDULA</th>
+                           <th class="text-center">FECHA</th>
+                           <th class="text-center">NOMBRES</th>
+                           <th class="text-center">TIPO FIRMAS</th>
+                           <th class="text-center">VIGENCIA</th>
+                           <th class="text-center">ESTADO</th>
+                           <th class="text-center">PARTNER</th>
+                           <th class="text-center">PENALIDAD</th>
+                           <th class="text-center">MONTO</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        @php
+                           $total = 0;
+                        @endphp
+                        @foreach ($allSignatures as $item)
+                           <tr>
+                              <td class="text-center">{{ $item->numerodocumento }}</td>
+                              <td class="text-center">{{ date('d-m-Y', strtotime($item->creacion)) }}</td>
+                              <td class="">{{ $item->nombres }} {{ $item->apellido1 }} {{ $item->apellido2 }}</td>
+                              <td class="text-center">{{ $item->formato }}</td>
+                              <td class="text-center">{{ $item->vigenciafirma }}</td>
+                              <td class="text-center">{{ $item->estado }}</td>
+                              <td class="text-center">{{ $partner->name }}</td>
+                              <td class="text-center">
+                                 @if ($item->penalidad === 1)
+                                 <i class="fa-regular fa-circle-check text-success"></i>
+                                 @else
+                                 <i class="fa-regular fa-circle-xmark text-danger"></i>
+                                 @endif
+                              <td class="text-center">$ {{ number_format($item->monto_pagado, 2, '.', '') }}</td>
+                           </tr>
+                           @php
+                              $total += floatval($item->monto_pagado);
+                           @endphp
+                        @endforeach
+                     </tbody>
+                     <tfoot>
+                        @php
+                        // dd($total . ' - ' . $debtsTotal);
+                           if(floatval($total) != floatval($debtsTotal))
+                           {
+                              $color = 'danger';
+                           }elseif($total === 0){
+                              $color = 'dark';
+                           }else{
+                              $color = 'success';
+                           }
+                        @endphp
+                        <tr>
+                           <th class="text-end" colspan="8">Total</th>
+                           <th class="text-center text-{{ $color }}">$ {{ number_format($total, 2, '.', '') }}</th>
+                        </tr>
+                     </tfoot>
+                  </table>
+                  
+                  {{-- <table class="table table-hover table-sm">
                      <thead>
                         <tr>
                            <th>Partners</th>
@@ -110,7 +159,7 @@
                            @foreach ($debts as $key => $item)
                               @if ($key === $partner->id)
                                  <tr>
-                                    <td><a href="{{ route('statistic.show', [$perMonth, $perYear, $partner->id, $partner->name]) }}">{{ $partner->name }}</a></td>
+                                    <td><a href="{{ route('statistics.show', $partner->id) }}">{{ $partner->name }}</a></td>
                                     <td>$ {{ number_format($item, 2, '.', '') }}</td>
                                     @php
                                        $total += $item;
@@ -126,9 +175,10 @@
                            <th>$ {{ number_format($total, 2, '.', '') }}</th>
                         </tr>
                      </tfoot>
-                  </table>
+                  </table> --}}
                </div>
             </div>
+            <img src="{{ route('image') }}" alt="">
          </div>
       </div>
    </div>
@@ -148,49 +198,6 @@
             toastr.success(event.detail[0].message);
          })
       </script>
-      
-      
    @endpush
-   @assets
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   @endassets
-   @script
-   <script>
-      let myStatistics;
-      window.addEventListener('data', event => {
-         const ctx = document.getElementById('myChart');
-         arrKeys = Object.keys(event.detail[0].message)
-         arrValues = Object.values(event.detail[0].message)
-         if(myStatistics)
-         {
-            myStatistics.destroy();
-         }
-         myStatistics = new Chart(ctx, {
-            type: 'line',
-            data: {
-               labels: arrKeys,
-               datasets: [{
-                  label: 'Ganancias por firma',
-                  data: arrValues,
-                  borderWidth: 2,
-                  borderColor: '#9F3331',
-                  backgroundColor: '#001166',
-                  tension: 0.3
-               }]
-            },
-            options: {
-               scales: {
-                  y: {
-                  beginAtZero: true
-                  }
-               }
-            }
-         });
-
-      });
-      
-      
-   </script>
-   @endscript
   
 </div>

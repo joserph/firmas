@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Consolidation;
 use App\Models\Geography;
 use App\Models\Nationalities;
+use App\Models\Partner;
+use App\Models\Price;
 use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
@@ -23,7 +26,7 @@ class CompanyMemberComponent extends Component
     public $f_cedulaFront, $f_cedulaBack, $f_selfie, $f_copiaruc, $f_adicional1, $f_adicional2, $f_adicional3, $f_adicional4;
     public $requiredCodigoDactilar, $cdactilar, $telfCelular2, $eMail2, $formato, $token, $ruc, $empresa, $cargo, $unidad, $tipodocumentoRL;
     public $numerodocumentoRL, $nombresRL, $apellido1RL, $apellido2RL, $displayVideo = 'none', $videoFile, $f_constitucion, $f_nombramiento;
-    public $f_nombramiento2, $f_documentoRL, $f_autreprelegal, $aditional1Extension;
+    public $f_nombramiento2, $f_documentoRL, $f_autreprelegal, $aditional1Extension, $partners, $partner, $formats;
     public function render()
     {
         return view('livewire.company-member-component');
@@ -36,6 +39,8 @@ class CompanyMemberComponent extends Component
         $this->provinces = array_unique($provincesAll, SORT_REGULAR);
         $this->cantons = collect();
         $this->validities = Validity::getValidityAll();
+        $this->partners = Partner::orderBy('name', 'ASC')->get();
+        $this->formats = Signature::getContainer();
     }
 
     public function changeTypeDocument()
@@ -119,17 +124,17 @@ class CompanyMemberComponent extends Component
 
     public function changeFormat()
     {
-        if($this->formato === 'TOKEN')
+        if($this->formato === '1')
         {
             $this->displayToken = 'block';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'COMBO p12+nube'){
+        }elseif($this->formato === '3'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'ARCHIVO'){
+        }elseif($this->formato === '0'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'EN NUBE'){
+        }elseif($this->formato === '2'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
         }
@@ -156,6 +161,7 @@ class CompanyMemberComponent extends Component
             ]);
 
             $companyMember = new Signature;
+            $companyMember->creacion = date('Y-m-d h:i:s');
             $companyMember->tipo_solicitud = 3;
             $companyMember->nombres = Str::upper($this->nombres); //si
             $companyMember->apellido1 = Str::upper($this->apellido1); //si
@@ -191,7 +197,7 @@ class CompanyMemberComponent extends Component
             $companyMember->nombresRL = $this->nombresRL; //si
             $companyMember->apellido1RL = $this->apellido1RL; //si
             $companyMember->apellido2RL = $this->apellido2RL; //si
-            $companyMember->estado = 'EN VALIDACION';
+            $companyMember->estado = 'SIN ENVIAR';
             $companyMember->user_id = Auth::user()->id;
 
             $companyMember->save();
@@ -229,6 +235,21 @@ class CompanyMemberComponent extends Component
             $companyMemberFile->f_autreprelegal = $f_autreprelegal;
 
             $companyMemberFile->save();
+            // Data for Consolidation
+            $consolidation = new Consolidation;
+            $consolidation->creacion_signature = $companyMember->creacion;
+            $consolidation->signature_id = $companyMember->id;
+            $consolidation->partner_id = $this->partner;
+            $consolidation->consolidado_banco = 'PENDIENTE';
+            $consolidation->estado_pago = 'PENDIENTE';
+            $consolidation->penalidad = 0;
+            // Price Signature
+            $price_signature = Price::getPriceSignature($companyMember->vigenciafirma, $this->partner);
+            // Price Uanataca
+            $price_uanataca = Price::getPriceUanataca($companyMember->vigenciafirma);
+            $consolidation->monto_pagado = $price_signature->amount;
+            $consolidation->monto_uanataca = $price_uanataca->amount;
+            $consolidation->save();
             
             return redirect()->route('signatures');
         }

@@ -52,6 +52,9 @@ return new class extends Migration
          $table->string('datos')->nullable();
          $table->string('documentos')->nullable();
          $table->foreignIdFor(User::class);
+         $table->dateTime('fecha_env_firma')->nullable();
+         $table->string('code')->nullable();
+         $table->text('observacion')->nullable();
 
          $table->timestamps();
       });

@@ -17,17 +17,20 @@ return new class extends Migration
 
             $table->foreignIdFor(Signature::class);
             $table->string('tipo_solicitud');
-            $table->longText('f_cedulaFront')->charset('binary');
-            $table->longText('f_cedulaBack')->charset('binary');
-            $table->longText('f_selfie')->charset('binary');
-            $table->longText('videoFile')->nullable()->charset('binary');
-            $table->longText('f_copiaruc')->nullable()->charset('binary');
+            $table->longText('f_cedulaFront')->charset('binary'); // NP, RP, ME
+            $table->longText('f_cedulaBack')->charset('binary'); // NP, RP, ME
+            $table->longText('f_selfie')->charset('binary'); // NP, RP, ME
+            $table->longText('videoFile')->nullable()->charset('binary'); // NP f_adicional1, RP, ME
+            $table->longText('f_copiaruc')->nullable()->charset('binary'); // NP, RP, ME
             $table->longText('f_adicional1')->nullable()->charset('binary');
-            $table->longText('f_constitucion')->nullable()->charset('binary');
-            $table->longText('f_nombramiento')->nullable()->charset('binary');
-            $table->longText('f_nombramiento2')->nullable()->charset('binary');
-            $table->longText('f_documentoRL')->nullable()->charset('binary');
-            $table->longText('f_autreprelegal')->nullable()->charset('binary');
+            $table->longText('f_adicional2')->nullable()->charset('binary'); // NP, RP, ME
+            $table->longText('f_adicional3')->nullable()->charset('binary'); // NP, RP, ME
+            $table->longText('f_adicional4')->nullable()->charset('binary'); // NP, RP, ME
+            $table->longText('f_constitucion')->nullable()->charset('binary'); // RP, ME
+            $table->longText('f_nombramiento')->nullable()->charset('binary'); // RP, ME
+            $table->longText('f_nombramiento2')->nullable()->charset('binary'); // RP, ME
+            $table->longText('f_documentoRL')->nullable()->charset('binary'); // ME
+            $table->longText('f_autreprelegal')->nullable()->charset('binary'); // ME
 
             $table->timestamps();
         });

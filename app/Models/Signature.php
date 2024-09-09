@@ -48,6 +48,7 @@ class Signature extends Model
     public static function getStateSignature()
     {
         return [
+            'SIN ENVIAR'            => __('SIN ENVIAR'),
             'NUEVO'                 => __('NUEVO'), // La solicitud ha sido ingresada y aún no ha sido revisada.
             'ASIGNADO'              => __('ASIGNADO'), // La solicitud ha sido asignada a un operador de registro para su verificación.
             'EN VALIDACION'         => __('EN VALIDACION'), // La solicitud está siendo revisada por un operador de registro.
@@ -64,5 +65,26 @@ class Signature extends Model
     public function consolidations(): HasMany
     {
         return $this->hasMany(Consolidation::class);
+    }
+
+    public static function allSignaturesFor($perMonth, $perYear, $partner_id, $paymentStatus)
+    {
+        return Signature::whereMonth('creacion', $perMonth)
+        ->whereYear('creacion', $perYear)
+        ->join('consolidations', 'consolidations.signature_id', '=', 'signatures.id')
+        ->select('signatures.*', 'consolidations.partner_id', 'consolidations.penalidad', 'consolidations.monto_pagado', 'consolidations.estado_pago')
+        ->where('consolidations.partner_id', $partner_id)
+        ->where('consolidations.estado_pago', $paymentStatus)
+        ->get();
+    }
+
+    public static function getContainer()
+    {
+        return [
+            0   => __('ARCHIVO .P12'), 
+            1   => __('UANA-TOKEN'), 
+            2   => __('FIRMA EN LA NUBE'), 
+            3   => __('COMBO P12+NUBE'), 
+        ];
     }
 }

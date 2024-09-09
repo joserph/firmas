@@ -39,4 +39,45 @@ class Price extends Model
             'UANATACA'      => __('UANATACA'),
         ];
     }
+
+    public static function getPenalty(){
+        return [
+            0.00        => __('0.00'),
+            1.00        => __('1.00'),
+            2.00        => __('2.00'),
+            3.00        => __('3.00'),
+            4.00        => __('4.00'),
+            5.00        => __('5.00'),
+        ];
+    }
+
+    public static function getPriceSignature($year, $partner)
+    {
+        // Search Promo
+        $promo = Price::where('validity', $year)->where('type_price', 'PROMO')->whereDate('start_date', '<=', date('Y-m-d'))->whereDate('final_date', '>=', date('Y-m-d'))->select('amount')->first();
+        // Preferencial
+        $partnerPreferencial = Partner::where('id', $partner)->where('preferential_price', '1')->first();
+        $preferencial = null;
+        if($partnerPreferencial)
+        {
+            $preferencial = Price::where('validity', $year)->where('type_price', 'PREFERENCIAL')->select('amount')->first();
+        }
+        
+        if($promo)
+        {
+            $priceSignature = $promo;
+        }elseif($preferencial){
+            $priceSignature = $preferencial;
+        }else{
+            $priceSignature = Price::where('validity', $year)->where('type_price', 'NORMAL')->select('amount')->first();
+        }
+        return $priceSignature;
+    }
+
+    public static function getPriceUanataca($year)
+    {
+        // Search Uanataca for date
+        $uanataca = Price::where('validity', $year)->where('type_price', 'UANATACA')->whereDate('start_date', '<=', date('Y-m-d'))->whereDate('final_date', '>=', date('Y-m-d'))->select('amount')->first();
+        return $uanataca;
+    }
 }

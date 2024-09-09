@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Models\Bank;
 use App\Models\ConsolidatedWithBank;
 use App\Models\Consolidation;
+use App\Models\DateMonth;
 use App\Models\Partner;
 use App\Models\PaymentMethod;
 use App\Models\PaymentStatus;
+use App\Models\Price;
 use App\Models\Signature;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,7 +22,7 @@ class ConsolidationComponent extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $search = '', $sortColumn = 'signature_id', $sortDirection = 'DESC', $partners, $banks, $consolidated_banks, $payment_status;
-    public $payment_methods;
+    public $payment_methods, $penalties, $perYear, $perMonth, $years, $months, $perPage = 10;
     public function mount()
     {
         $this->partners = Partner::all();
@@ -28,15 +30,31 @@ class ConsolidationComponent extends Component
         $this->consolidated_banks = ConsolidatedWithBank::getConsolidatedWithBank();
         $this->payment_status = PaymentStatus::getPaymentStatus();
         $this->payment_methods = PaymentMethod::getPaymentMethod();
-        // dd($this->payment_methods);
+        $this->penalties = Price::getPenalty();
+        $this->perMonth = date('n');
+        $this->perYear = date('Y');
+        $this->years = DateMonth::getYear();
+        $this->months = DateMonth::getMonth();
+        // dd($this->perMonth);
     }
 
     
     public function render()
     {
+        $algo = Consolidation::whereMonth('creacion_signature', $this->perMonth)
+            ->whereYear('creacion_signature', $this->perYear)
+            ->join('signatures', 'signatures.id', '=', 'consolidations.signature_id')
+            ->select('consolidations.*')
+            ->orderBy('creacion_signature', 'DESC')
+            ->paginate($this->perPage);
+        // dd($algo);
         return view('livewire.consolidation-component', [
-            'consolidations' => Consolidation::orderBy('id', 'DESC')
-                ->paginate(10)
+            'consolidations' => Consolidation::whereMonth('creacion_signature', $this->perMonth)
+                ->whereYear('creacion_signature', $this->perYear)
+                // ->join('signatures', 'signatures.id', '=', 'consolidations.signature_id')
+                // ->select('consolidations.*')
+                ->orderBy('creacion_signature', 'DESC')
+                ->paginate($this->perPage)
         ]);
     }
 

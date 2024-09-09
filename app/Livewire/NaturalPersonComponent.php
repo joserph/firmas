@@ -3,10 +3,13 @@
 namespace App\Livewire;
 
 use App\Imports\SignatureImport;
+use App\Models\Consolidation;
 use App\Models\Geography;
 use App\Models\Nationalities;
 use App\Models\NaturalPerson;
 use App\Models\NaturalPersonFile;
+use App\Models\Partner;
+use App\Models\Price;
 use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
@@ -25,8 +28,8 @@ class NaturalPersonComponent extends Component
     public $f_cedulaFront, $f_cedulaBack, $f_selfie, $f_copiaruc, $f_adicional1, $f_adicional2, $f_adicional3, $f_adicional4;
     public $cdactilar, $telfCelular2, $eMail2, $ConRuc, $formato, $selectCedula = 'disabled', $numRuc = 'none', $requiredCodigoDactilar;
     public $provinces, $cantons = [], $token, $displayToken = 'none', $validities, $nationalities, $displayVideo = 'none', $headerButton = 'primary', $headerText = 'light';
-    public $headerButton2 = '', $headerText2 = '', $aditional1Extension;
-    public $videoFile;
+    public $headerButton2 = '', $headerText2 = '', $aditional1Extension, $partners, $partner, $formats, $videoFile;
+    // public $videoFile;
     public $requiredRuc;
     public $currentStep = 1;
     public $totalStep = 2;
@@ -41,6 +44,8 @@ class NaturalPersonComponent extends Component
         $this->cantons = collect();
         $this->validities = Validity::getValidityAll();
         $this->nationalities = Nationalities::getNationalities();
+        $this->partners = Partner::orderBy('name', 'ASC')->get();
+        $this->formats = Signature::getContainer();
     }
 
     public function render()
@@ -109,17 +114,17 @@ class NaturalPersonComponent extends Component
 
     public function changeFormat()
     {
-        if($this->formato === 'TOKEN')
+        if($this->formato === '1')
         {
             $this->displayToken = 'block';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'COMBO p12+nube'){
+        }elseif($this->formato === '3'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityYear();
-        }elseif($this->formato === 'ARCHIVO'){
+        }elseif($this->formato === '0'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityAll();
-        }elseif($this->formato === 'EN NUBE'){
+        }elseif($this->formato === '2'){
             $this->displayToken = 'none';
             $this->validities = Validity::getValidityAll();
         }
@@ -129,6 +134,7 @@ class NaturalPersonComponent extends Component
     {
         ($this->tipodocumento == 'CEDULA') ? $this->requiredCodigoDactilar = 'required' : $this->requiredCodigoDactilar = '';
         ($this->con_ruc == 'SI') ? $this->requiredRuc = 'required' : $this->requiredRuc = '';
+        // dd($this->partner);
         if($this->currentStep === 1)
         {
             $this->validate([
@@ -152,7 +158,8 @@ class NaturalPersonComponent extends Component
                 'direccion'         => 'required',
                 'formato'           => 'required',
                 'vigenciafirma'     => 'required',
-                'token'             => 'nullable|max:50'
+                'token'             => 'nullable|max:50',
+                'partner'           => 'required'
             ]);
         }
         
@@ -160,6 +167,9 @@ class NaturalPersonComponent extends Component
 
     public function saveNaturalPerson()
     {
+        // $algo = Price::getPriceSignature(1, $this->partner);
+        // $algo1 = Price::getPriceUanataca(1);
+        // dd($algo);
         ($this->con_ruc == 'SI') ? $this->requiredRuc = 'required' : $this->requiredRuc = '';
         if($this->currentStep === 2)
         {
@@ -167,7 +177,7 @@ class NaturalPersonComponent extends Component
                 'f_cedulaFront'     => 'required|image|mimes:jpg,png',
                 'f_cedulaBack'      => 'required|image|mimes:jpg,png',
                 'f_selfie'          => 'required|image|mimes:jpg,png',
-                'videoFile'         => 'nullable|mimetypes:video/avi,video/mpeg,video/quicktime|max:10240',
+                'videoFile'         => 'nullable|mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:10240',
                 'f_copiaruc'        => $this->requiredRuc . '|nullable|file|mimes:pdf',
                 'f_adicional1'      => 'nullable|file|mimes:pdf,jpg,png',
                 'f_adicional2'      => 'nullable|file|mimes:pdf',
@@ -202,7 +212,7 @@ class NaturalPersonComponent extends Component
         $naturalPerson->formato = $this->formato;//si
         $naturalPerson->vigenciafirma = $this->vigenciafirma;//si
         $naturalPerson->token = $this->token;//si
-        $naturalPerson->estado = 'EN VALIDACION';
+        $naturalPerson->estado = 'SIN ENVIAR';
         $naturalPerson->user_id = Auth::user()->id;
         $naturalPerson->save();
 
@@ -224,6 +234,22 @@ class NaturalPersonComponent extends Component
         $naturalPersonFile->f_copiaruc = $f_copiaruc;
         $naturalPersonFile->f_adicional1 = $f_adicional1;
         $naturalPersonFile->save();
+        // dd($naturalPersonFile);
+        // Data for Consolidation
+        $consolidation = new Consolidation;
+        $consolidation->creacion_signature = $naturalPerson->creacion;
+        $consolidation->signature_id = $naturalPerson->id;
+        $consolidation->partner_id = $this->partner;
+        $consolidation->consolidado_banco = 'PENDIENTE';
+        $consolidation->estado_pago = 'PENDIENTE';
+        $consolidation->penalidad = 0;
+        // Price Signature
+        $price_signature = Price::getPriceSignature($naturalPerson->vigenciafirma, $this->partner);
+        // Price Uanataca
+        $price_uanataca = Price::getPriceUanataca($naturalPerson->vigenciafirma);
+        $consolidation->monto_pagado = $price_signature->amount;
+        $consolidation->monto_uanataca = $price_uanataca->amount;
+        $consolidation->save();
         
         return redirect()->route('signatures');
     }
@@ -239,11 +265,4 @@ class NaturalPersonComponent extends Component
         $this->numRuc = 'block';
         $this->ruc_personal = $this->numerodocumento . '001';
     }
-
-
-    // function resetImage($img){
-    //     $this->reset($img);
-    //     // $this->id++;
-    //     session()->flash('success','Image Reset');
-    // }
 }

@@ -59,9 +59,9 @@
             @else
                src="{{ asset('assets/images/others/video.png') }}"
             @endif  alt="">
-            <input class="inputImage" type="file" wire:model="videoFile"  >
+            <input class="inputImage" type="file" wire:model="videoFile">
          </div>
-         @error('video')
+         @error('videoFile')
             <span class="text-danger">{{$message}}</span>
          @enderror
       </div>
@@ -86,18 +86,18 @@
       <div class="pictureContainer">
          <h6 class="text-center">Documento Adicional 1</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_adicional1)
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_adicional2)
                @if ($aditional1Extension === 'pdf')
                   src="{{ asset('assets/images/others/pdf_on.jpg') }}"
                @else
-                  src="{{ $f_adicional1->temporaryUrl() }}"
+                  src="{{ $f_adicional2->temporaryUrl() }}"
                @endif
             @else
                src="{{ asset('assets/images/others/adicional.jpg') }}"
             @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf,.jpg,.jpeg,.png" wire:model="f_adicional1">
+            <input class="inputImage" type="file" accept=".pdf,.jpg,.jpeg,.png" wire:model="f_adicional2">
          </div>
-         @error('f_adicional1')
+         @error('f_adicional2')
             <span class="text-danger">{{$message}}</span>
          @enderror
       </div>

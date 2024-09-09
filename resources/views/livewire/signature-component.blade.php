@@ -73,25 +73,59 @@
                            <th wire:click='doSort("estado")' class="text-center" style="min-width: 210px">
                               <x-datatable-item :sortColumn='$sortColumn' :sortDirection='$sortDirection' spanishName='Estado' columnName='estado' />
                            </th>
+                           <th>Enviar</th>
+                           <th>Consultar</th>
                         </tr>
                      </thead>
                      <tbody>
                         @foreach ($signatures as $item)
-                        <tr>
+                        <tr wire:key="{{ $item->id }}">
+                           <div class="d-flex align-items-center">
+                              <strong wire:loading.delay wire:target="sendingSignature({{ $item->id }})" role="status">Enviando...</strong>
+                              <div wire:loading.delay wire:target="sendingSignature({{ $item->id }})" class="spinner-border ms-auto text-primary" aria-hidden="true"></div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <strong wire:loading.delay wire:target="signatureStatusQuery({{ $item->id }})" role="status">Enviando...</strong>
+                              <div wire:loading.delay wire:target="signatureStatusQuery({{ $item->id }})" class="spinner-border ms-auto text-success" aria-hidden="true"></div>
+                            </div>
+                           {{-- <div  class="d-flex justify-content-center">
+                              <div  class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                           </div> --}}
                            <td class="text-center align-middle"><small>{{ $item->numerodocumento }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->ruc }}</small></td>
                            <td class="text-center align-middle"><small>{{ date('d-m-Y', strtotime($item->creacion)) }}</small></td>
-                           <td class="text-center align-middle"><small>{{ $item->nombres }}</small></td>
-                           <td class="text-center align-middle"><small>{{ $item->tipo_solicitud }}</small></td>
+                           <td class="text-center align-middle"><small>{{ $item->nombres }} {{ $item->apellido1 }} {{ $item->apellido2 }}</small></td>
+                           <td class="text-center align-middle"><small>
+                              @if ($item->tipo_solicitud == 1)
+                                 PERSONA NATURAL
+                              @elseif ($item->tipo_solicitud == 2)
+                                 REPRESENTANTE LEGAL
+                              @elseif ($item->tipo_solicitud == 3)
+                                 MIEMBRO DE EMPRESA
+                              @else
+                              {{ $item->tipo_solicitud }}
+                              @endif
+                           </small></td>
                            <td class="text-center align-middle"><small>{{ $item->vigenciafirma }}</small></td>
                            <td class="text-center align-middle">
-                              <select wire:change='changeInputSelect({{ $item->id }}, $event.target.value, $event.target.name)' name="estado" class="form-select form-select-sm" >
+                              <select wire:change='changeInputSelect({{ $item->id }}, $event.target.value, $event.target.name)' name="estado" class="form-select form-select-sm" {{($item->fecha_nacimiento) ? $sendButton : ''}} >
                                  <option value="NULL">-</option>
                                  @foreach ($stateSignatures as $stateSignature)
                                  <option value="{{ $stateSignature }}" {{ ($stateSignature === $item->estado) ? 'selected' : '' }}>{{ $stateSignature }}</option>
                                  @endforeach
                               </select>
-                              {{-- {{ $item->estado }} --}}
+                           </td>
+                           <td class="text-center">
+                              <button type="submit" wire:loading.attr='disabled' class="btn btn-primary btn-sm" wire:click='sendingSignature({{$item->id}})' {{($item->estado == 'SIN ENVIAR') ? '' : $sendButton}}>
+                                 <i class="fa-regular fa-paper-plane"></i> 
+                              </button>
+                           </td>
+                           <td class="text-center">
+                              <button type="submit" wire:loading.attr='disabled' class="btn btn-success btn-sm" wire:click='signatureStatusQuery({{$item->id}})' {{($item->estado != 'SIN ENVIAR') ? '' : $sendButton}}>
+                                 <i class="fa-solid fa-down-left-and-up-right-to-center"></i>
+                              </button>
                            </td>
                         </tr>
                         @endforeach
@@ -110,6 +144,16 @@
    @push('js')
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+      @if (Session::has('send'))
+         <script>
+            toastr.success("{{ Session::get('send') }}");
+         </script>
+      @endif
+      @if (Session::has('error_send'))
+         <script>
+            toastr.error("{{ Session::get('error_send') }}");
+         </script>
+      @endif
       <script>
          $(document).ready(function(){
             toastr.options = {
@@ -120,6 +164,12 @@
 
          window.addEventListener('success', event => {
             toastr.success(event.detail[0].message);
+         })
+         window.addEventListener('send', event => {
+            toastr.success(event.detail[0].message);
+         })
+         window.addEventListener('error_send', event => {
+            toastr.error(event.detail[0].message);
          })
          window.addEventListener('delete', event => {
             Swal.fire({

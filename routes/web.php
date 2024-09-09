@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\UanatacaController;
 use App\Livewire\CompanyMemberComponent;
 use App\Livewire\LegalRepresentativeComponent;
 use App\Livewire\NaturalPersonComponent;
@@ -14,6 +15,7 @@ use App\Livewire\PermissionComponent;
 use App\Livewire\PriceComponent;
 use App\Livewire\SignatureComponent;
 use App\Livewire\StatisticsComponent;
+use App\Livewire\StatisticShowComponent;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -38,7 +40,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::middleware(['auth'])->group(function () {
     Route::resource('/roles', RoleController::class);
     Route::resource('/users', UserController::class);
-    Route::get('permissions', PermissionComponent::class);
+    Route::get('permissions', PermissionComponent::class)->name('permissions');
     Route::get('signatures', SignatureComponent::class)->name('signatures');
     Route::get('natural-persons', NaturalPersonComponent::class)->name('natural-persons');
     Route::get('partners', PartnerComponent::class)->name('partners');
@@ -48,4 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('import-signatures', [ImportController::class, 'importSignatures'])->name('import-signatures');
     Route::get('consolidations', ConsolidationComponent::class)->name('consolidations');
     Route::get('statistics', StatisticsComponent::class)->name('statistics');
+    Route::get('/statistic/{month}/{year}/{id}/{name}', StatisticShowComponent::class)->where('id', '[0-9]+')->name('statistic.show');
+    Route::get('image', [ImportController::class, 'image'])->name('image');
+    Route::prefix('v1')->group(function(){
+        Route::post('sendingSignature/{id}', [UanatacaController::class, 'sendingSignature'])->name('sending-signature');
+    });
 });
