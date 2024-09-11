@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UanatacaController;
 use App\Livewire\CompanyMemberComponent;
+use App\Livewire\EditNaturalPersonComponent;
 use App\Livewire\LegalRepresentativeComponent;
 use App\Livewire\NaturalPersonComponent;
 use App\Livewire\PartnerComponent;
@@ -55,4 +56,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('v1')->group(function(){
         Route::post('sendingSignature/{id}', [UanatacaController::class, 'sendingSignature'])->name('sending-signature');
     });
+    // Edit Signatures
+    Route::get('natural-persons/{id}/edit', EditNaturalPersonComponent::class)->name('natural-persons.edit');
 });

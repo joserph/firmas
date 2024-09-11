@@ -249,7 +249,7 @@ class SignatureComponent extends Component
             $documentType = $signature->ruc;
         }elseif($signature->tipo_solicitud === '3')
         {
-
+            $documentType = $signature->ruc;
         }
         $signatureData = array(
             'apikey' => env('UANA_APIKEY'),

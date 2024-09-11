@@ -93,7 +93,17 @@
                                 <span class="visually-hidden">Loading...</span>
                               </div>
                            </div> --}}
-                           <td class="text-center align-middle"><small>{{ $item->numerodocumento }}</small></td>
+                           <td class="text-center align-middle">
+                              <small>
+                                 @if ($item->tipo_solicitud == 1)
+                                    <a href="{{ route('natural-persons.edit', $item) }}">{{ $item->numerodocumento }}</a>
+                                 @elseif ($item->tipo_solicitud == 2)
+                                    {{ $item->numerodocumento }}
+                                 @elseif ($item->tipo_solicitud == 3)
+                                    {{ $item->numerodocumento }}
+                                 @endif
+                              </small>
+                           </td>
                            <td class="text-center align-middle"><small>{{ $item->ruc }}</small></td>
                            <td class="text-center align-middle"><small>{{ date('d-m-Y', strtotime($item->creacion)) }}</small></td>
                            <td class="text-center align-middle"><small>{{ $item->nombres }} {{ $item->apellido1 }} {{ $item->apellido2 }}</small></td>
@@ -118,12 +128,12 @@
                               </select>
                            </td>
                            <td class="text-center">
-                              <button type="submit" wire:loading.attr='disabled' class="btn btn-primary btn-sm" wire:click='sendingSignature({{$item->id}})' {{($item->estado == 'SIN ENVIAR') ? '' : $sendButton}}>
+                              <button type="submit" wire:loading.attr='disabled' class="btn btn-primary btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" wire:click='sendingSignature({{$item->id}})' {{($item->estado == 'SIN ENVIAR') ? '' : $sendButton}}>
                                  <i class="fa-regular fa-paper-plane"></i> 
                               </button>
                            </td>
                            <td class="text-center">
-                              <button type="submit" wire:loading.attr='disabled' class="btn btn-success btn-sm" wire:click='signatureStatusQuery({{$item->id}})' {{($item->estado != 'SIN ENVIAR') ? '' : $sendButton}}>
+                              <button type="submit" wire:loading.attr='disabled' class="btn btn-success btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" wire:click='signatureStatusQuery({{$item->id}})' {{($item->estado != 'SIN ENVIAR') ? '' : $sendButton}}>
                                  <i class="fa-solid fa-down-left-and-up-right-to-center"></i>
                               </button>
                            </td>
