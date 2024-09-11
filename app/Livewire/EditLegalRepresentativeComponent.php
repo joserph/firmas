@@ -10,22 +10,24 @@ use App\Models\Signature;
 use App\Models\SignatureFile;
 use App\Models\Validity;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\Attributes\Url;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
-class EditNaturalPersonComponent extends Component
+class EditLegalRepresentativeComponent extends Component
 {
     use WithFileUploads;
     #[Url]
     public $id;
-    public $headerButton = 'warning', $headerText, $headerButton2 = '', $headerText2 = '', $currentStep = 1, $nationalities, $selectCedula = 'disabled';
-    public $numRuc = 'none', $provinces, $cantons = [], $formats, $validities, $displayToken = 'none', $partners, $totalStep = 2, $ruc_personal, $signature;
-    public $numerodocumento, $radioCheckedOn, $radioCheckedOff, $provincia, $nombres, $tipodocumento, $apellido1, $apellido2, $fecha_nacimiento, $sexo;
-    public $nacionalidad, $cdactilar, $telfCelular, $eMail, $telfCelular2, $eMail2, $con_ruc, $ciudad, $direccion, $formato, $vigenciafirma, $token, $partner;
-    public $requiredCodigoDactilar, $requiredRuc, $f_cedulaFront, $f_cedulaBack, $f_selfie, $displayVideo = 'none', $videoFile, $f_copiaruc, $f_adicional2;
-    public $f_adicional1, $f_adicional3, $f_adicional4, $signatureFile;
+    public $headerButton = 'warning', $headerText = 'dark', $headerButton2 = '', $headerText2 = '', $currentStep = 1, $nationalities;
+    public $selectCedula = 'disabled', $provinces, $cantons = [], $validities, $displayToken = 'none', $totalStep = 2;
+    public $tipo_solicitud, $contenedor, $nombres, $apellido1, $apellido2, $tipodocumento, $numerodocumento, $ruc_personal, $con_ruc;
+    public $sexo, $fecha_nacimiento, $nacionalidad = 'ECUATORIANA', $telfCelular, $telfFijo, $eMail, $provincia, $ciudad, $direccion, $vigenciafirma;
+    public $f_cedulaFront, $f_cedulaBack, $f_selfie, $f_copiaruc, $f_adicional1, $f_adicional2, $f_adicional3, $f_adicional4;
+    public $cdactilar, $telfCelular2, $eMail2, $ConRuc, $formato, $requiredCodigoDactilar, $videoFile, $f_nombramiento, $f_constitucion;
+    public $token, $displayVideo = 'none', $aditional1Extension, $ruc, $empresa, $cargo, $f_nombramiento2, $formats, $partners, $partner;
+    public $signature, $signatureFile, $rule_f_constitucion = '', $rule_f_nombramiento = '', $rule_f_nombramiento2 = '';
     public $rule_f_cedulaFront = '', $rule_f_cedulaBack = '', $rule_f_selfie = '', $rule_videoFile = '', $rule_f_copiaruc = '', $rule_f_adicional2 = '';
 
     public function mount()
@@ -37,8 +39,8 @@ class EditNaturalPersonComponent extends Component
         $this->formats = Signature::getContainer();
         $this->validities = Validity::getValidityAll();
         $this->partners = Partner::orderBy('name', 'ASC')->get();
-        $this->signature = Signature::find($this->id);
         // Values Imputs
+        $this->signature = Signature::find($this->id);
         $this->tipodocumento = $this->signature->tipodocumento;
         $this->numerodocumento = $this->signature->numerodocumento;
         $this->nombres = $this->signature->nombres;
@@ -53,9 +55,9 @@ class EditNaturalPersonComponent extends Component
         $this->eMail = $this->signature->eMail;
         $this->telfCelular2 = $this->signature->telfCelular2;
         $this->eMail2 = $this->signature->eMail2;
-        ($this->signature->con_ruc === 'SI') ? $this->conRuc() : $this->sinRuc();
-        $this->con_ruc = $this->signature->con_ruc;
-        $this->ruc_personal = $this->signature->ruc_personal;
+        $this->ruc = $this->signature->ruc;
+        $this->empresa = $this->signature->empresa;
+        $this->cargo = $this->signature->cargo;
         $provincia = Geography::where('name_province', $this->signature->provincia)->select('cod_province')->first();
         $this->provincia = $provincia->cod_province;
         $this->updatedProvincia($this->provincia);
@@ -73,11 +75,19 @@ class EditNaturalPersonComponent extends Component
         $this->f_cedulaBack = $this->signatureFile->f_cedulaBack;
         $this->f_selfie = $this->signatureFile->f_selfie;
         $this->f_copiaruc = $this->signatureFile->f_copiaruc;
+        $this->f_constitucion = $this->signatureFile->f_constitucion;
+        $this->f_nombramiento = $this->signatureFile->f_nombramiento;
+        $this->f_nombramiento2 = $this->signatureFile->f_nombramiento2;
         $this->f_adicional2 = $this->signatureFile->f_adicional2;
     }
     public function render()
     {
-        return view('livewire.edit-natural-person-component');
+        return view('livewire.edit-legal-representative-component');
+    }
+
+    public function updatedProvincia($value)
+    {
+        $this->cantons = Geography::orderBy('name_canton', 'asc')->select('cod_canton', 'name_canton')->where('cod_province', $value)->get()->toArray();
     }
 
     public function changeTypeDocument()
@@ -88,27 +98,6 @@ class EditNaturalPersonComponent extends Component
         }else{
             $this->selectCedula = '';
         }
-    }
-
-    public function sinRuc()
-    {
-        $this->numRuc = 'none';
-        $this->ruc_personal = '';
-        $this->radioCheckedOn = '';
-        $this->radioCheckedOff = 'checked';
-    }
-
-    public function conRuc()
-    {
-        $this->numRuc = 'block';
-        $this->ruc_personal = $this->numerodocumento . '001';
-        $this->radioCheckedOn = 'checked';
-        $this->radioCheckedOff = '';
-    }
-
-    public function updatedProvincia($value)
-    {
-        $this->cantons = Geography::orderBy('name_canton', 'asc')->select('cod_canton', 'name_canton')->where('cod_province', $value)->get()->toArray();
     }
 
     public function changeFormat()
@@ -124,11 +113,11 @@ class EditNaturalPersonComponent extends Component
             $this->vigenciafirma = '';
         }elseif($this->formato === '0'){
             $this->displayToken = 'none';
-            $this->validities = Validity::getValidityAll();
+            $this->validities = Validity::getValidityYear();
             $this->vigenciafirma = '';
         }elseif($this->formato === '2'){
             $this->displayToken = 'none';
-            $this->validities = Validity::getValidityAll();
+            $this->validities = Validity::getValidityYear();
             $this->vigenciafirma = '';
         }
     }
@@ -146,39 +135,6 @@ class EditNaturalPersonComponent extends Component
         }
     }
 
-    public function validateForm()
-    {
-        ($this->tipodocumento == 'CEDULA') ? $this->requiredCodigoDactilar = 'required' : $this->requiredCodigoDactilar = '';
-        ($this->con_ruc == 'SI') ? $this->requiredRuc = 'required' : $this->requiredRuc = '';
-        if($this->currentStep === 1)
-        {
-            $this->validate([
-                'nombres'           => 'required',
-                'apellido1'         => 'required',
-                'apellido2'         => 'nullable',
-                'tipodocumento'     => 'required',
-                'numerodocumento'   => 'required|min:5|max:20',
-                'ruc_personal'      => $this->requiredRuc . '|nullable|numeric|min_digits:13|max_digits:13', //13
-                'sexo'              => 'required',
-                'fecha_nacimiento'  => 'required|date',
-                'nacionalidad'      => 'required',
-                'cdactilar'         => $this->requiredCodigoDactilar . '|min:6|max:10|nullable',
-                'telfCelular'       => 'required|numeric|min_digits:10|max_digits:10',
-                'telfCelular2'      => 'numeric|nullable|min_digits:10|max_digits:10',
-                'eMail'             => 'required|email',
-                'eMail2'            => 'nullable|email',
-                'con_ruc'           => 'required',
-                'provincia'         => 'required',
-                'ciudad'            => 'required',
-                'direccion'         => 'required',
-                'formato'           => 'required',
-                'vigenciafirma'     => 'required',
-                'token'             => 'nullable|max:50',
-                'partner'           => 'required'
-            ]);
-        }
-    }
-
     public function decrementSteps()
     {
         if($this->currentStep === 2)
@@ -191,7 +147,41 @@ class EditNaturalPersonComponent extends Component
         }
     }
 
-    public function saveNaturalPerson()
+    public function validateForm()
+    {
+        ($this->tipodocumento == 'CEDULA') ? $this->requiredCodigoDactilar = 'required' : $this->requiredCodigoDactilar = '';
+        if($this->currentStep === 1)
+        {
+            $this->validate([
+                'nombres'           => 'required',
+                'apellido1'         => 'required',
+                'apellido2'         => 'nullable',
+                'tipodocumento'     => 'required',
+                'numerodocumento'   => 'required|min:5|max:20',
+                'sexo'              => 'required',
+                'fecha_nacimiento'  => 'required|date',
+                'nacionalidad'      => 'required',
+                'cdactilar'         => $this->requiredCodigoDactilar . '|min:6|max:10|nullable',
+                'telfCelular'       => 'required|numeric|min_digits:10|max_digits:10',
+                'telfCelular2'      => 'numeric|nullable|min_digits:10|max_digits:10',
+                'eMail'             => 'required|email',
+                'eMail2'            => 'nullable|email',
+                // 'con_ruc'           => 'required',
+                'provincia'         => 'required',
+                'ciudad'            => 'required',
+                'direccion'         => 'required',
+                'formato'           => 'required',
+                'vigenciafirma'     => 'required',
+                'token'             => 'nullable|max:50',
+                'ruc'               => 'required|numeric|min_digits:13|max_digits:13',
+                'empresa'           => 'required',
+                'cargo'             => 'required',
+                'partner'           => 'required'
+            ]);
+        }
+    }
+
+    public function saveLegalRepresentative()
     {
         (gettype($this->f_cedulaFront) === 'object') ? $this->rule_f_cedulaFront = 'required|image|mimes:jpg,png' : '';
         (gettype($this->f_cedulaBack) === 'object') ? $this->rule_f_cedulaBack = 'required|image|mimes:jpg,png' : '';
@@ -199,6 +189,9 @@ class EditNaturalPersonComponent extends Component
         (gettype($this->videoFile) === 'object') ? $this->rule_videoFile = 'nullable|mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4|max:10240' : '';
         (gettype($this->f_copiaruc) === 'object') ? $this->rule_f_copiaruc = 'required|nullable|file|mimes:pdf' : '';
         (gettype($this->f_adicional2) === 'object') ? $this->rule_f_adicional2 = 'nullable|file|mimes:pdf,jpg,png' : '';
+        (gettype($this->f_constitucion) === 'object') ? $this->rule_f_constitucion = 'required|file|mimes:pdf' : '';
+        (gettype($this->f_nombramiento) === 'object') ? $this->rule_f_nombramiento = 'required|file|mimes:pdf' : '';
+        (gettype($this->f_nombramiento2) === 'object') ? $this->rule_f_nombramiento2 = 'nullable|file|mimes:pdf' : '';
         if($this->currentStep === 2)
         {
             $this->validate([
@@ -211,35 +204,42 @@ class EditNaturalPersonComponent extends Component
                 'f_adicional2'      => $this->rule_f_adicional2,
                 'f_adicional3'      => 'nullable|file|mimes:pdf',
                 'f_adicional4'      => 'nullable|file|mimes:pdf',
+                'f_constitucion'    => $this->rule_f_constitucion,
+                'f_nombramiento'    => $this->rule_f_nombramiento,
+                'f_nombramiento2'   => $this->rule_f_nombramiento2
             ]);
         }
-        $naturalPerson = Signature::find($this->id);
-        $naturalPerson->nombres = Str::upper($this->nombres); //si
-        $naturalPerson->apellido1 = Str::upper($this->apellido1); //si
-        $naturalPerson->apellido2 = Str::upper($this->apellido2); //si
-        $naturalPerson->tipodocumento = $this->tipodocumento; //si
-        $naturalPerson->numerodocumento = $this->numerodocumento; //si
-        $naturalPerson->ruc_personal = $this->ruc_personal;//si
-        $naturalPerson->sexo = $this->sexo;//si
-        $naturalPerson->fecha_nacimiento = $this->fecha_nacimiento;//si
-        $naturalPerson->nacionalidad = $this->nacionalidad;//si
-        $naturalPerson->cdactilar = Str::upper($this->cdactilar);//si
-        $naturalPerson->telfCelular = $this->telfCelular;//si
-        $naturalPerson->telfCelular2 = $this->telfCelular2;//si
-        $naturalPerson->eMail = $this->eMail;//si
-        $naturalPerson->eMail2 = $this->eMail2;//si
-        $naturalPerson->con_ruc = $this->con_ruc;//si
+
+        $legalRepresentative = Signature::find($this->id);
+        $legalRepresentative->nombres = Str::upper($this->nombres); //si
+        $legalRepresentative->apellido1 = Str::upper($this->apellido1); //si
+        $legalRepresentative->apellido2 = Str::upper($this->apellido2); //si
+        $legalRepresentative->tipodocumento = $this->tipodocumento; //si
+        $legalRepresentative->numerodocumento = $this->numerodocumento; //si
+        $legalRepresentative->ruc_personal = $this->ruc_personal;//si
+        $legalRepresentative->sexo = $this->sexo;//si
+        $legalRepresentative->fecha_nacimiento = $this->fecha_nacimiento;//si
+        $legalRepresentative->nacionalidad = $this->nacionalidad;//si
+        $legalRepresentative->cdactilar = Str::upper($this->cdactilar);//si
+        $legalRepresentative->telfCelular = $this->telfCelular;//si
+        $legalRepresentative->telfCelular2 = $this->telfCelular2;//si
+        $legalRepresentative->eMail = $this->eMail;//si
+        $legalRepresentative->eMail2 = $this->eMail2;//si
         $provinciaText = Geography::select('name_province')->where('cod_province', $this->provincia)->first();
         $ciudadText = Geography::select('name_canton')->where('cod_province', $this->provincia)->where('cod_canton', $this->ciudad)->first();
-        $naturalPerson->provincia = $provinciaText->name_province;//si
-        $naturalPerson->ciudad = $ciudadText->name_canton;//si
-        $naturalPerson->direccion = Str::upper($this->direccion);//si
-        $naturalPerson->formato = $this->formato;//si
-        $naturalPerson->vigenciafirma = $this->vigenciafirma;//si
-        $naturalPerson->token = $this->token;//si
-        $naturalPerson->estado = 'ACTUALIZADO';
-        $naturalPerson->user_id = Auth::user()->id;
-        $naturalPerson->save();
+        $legalRepresentative->provincia = $provinciaText->name_province;//si
+        $legalRepresentative->ciudad = $ciudadText->name_canton;//si
+        $legalRepresentative->direccion = Str::upper($this->direccion);//si
+        $legalRepresentative->formato = $this->formato;//si
+        $legalRepresentative->vigenciafirma = $this->vigenciafirma;//si
+        $legalRepresentative->token = $this->token;//si
+        // Legal Representative
+        $legalRepresentative->ruc = $this->ruc; //si
+        $legalRepresentative->empresa = $this->empresa; //si
+        $legalRepresentative->cargo = $this->cargo; //si
+        $legalRepresentative->estado = 'ACTUALIZADO';
+        $legalRepresentative->user_id = Auth::user()->id;
+        $legalRepresentative->save();
 
         // Convert to Base64
         $f_cedulaFront = (gettype($this->f_cedulaFront) === 'object') ? base64_encode(file_get_contents($this->f_cedulaFront->getRealPath())) : $this->f_cedulaFront;
@@ -248,33 +248,28 @@ class EditNaturalPersonComponent extends Component
         $videoFile = (gettype($this->videoFile) === 'object') ? base64_encode(file_get_contents($this->videoFile->getRealPath())) : $this->videoFile;
         $f_copiaruc = (gettype($this->f_copiaruc) === 'object') ? base64_encode(file_get_contents($this->f_copiaruc->getRealPath())) : $this->f_copiaruc;
         $f_adicional2 = (gettype($this->f_adicional2) === 'object') ? base64_encode(file_get_contents($this->f_adicional2->getRealPath())) : $this->f_adicional2;
-        
-        $naturalPersonFile = SignatureFile::where('signature_id', $naturalPerson->id)->first();
-        $naturalPersonFile->f_cedulaFront = $f_cedulaFront;
-        $naturalPersonFile->f_cedulaBack = $f_cedulaBack;
-        $naturalPersonFile->f_selfie = $f_selfie;
-        $naturalPersonFile->videoFile = $videoFile;
-        $naturalPersonFile->f_copiaruc = $f_copiaruc;
-        $naturalPersonFile->f_adicional2 = $f_adicional2;
-        $naturalPersonFile->save();
+        // Legal representative
+        $f_constitucion = (gettype($this->f_constitucion) === 'object') ? base64_encode(file_get_contents($this->f_constitucion->getRealPath())) : $this->f_constitucion;
+        $f_nombramiento = (gettype($this->f_nombramiento) === 'object') ? base64_encode(file_get_contents($this->f_nombramiento->getRealPath())) : $this->f_nombramiento;
+        $f_nombramiento2 = (gettype($this->f_nombramiento2) === 'object') ? base64_encode(file_get_contents($this->f_nombramiento2->getRealPath())) : $this->f_nombramiento2;
+
+        $legalRepresentativeFile = SignatureFile::where('signature_id', $legalRepresentative->id)->first();
+        $legalRepresentativeFile->f_cedulaFront = $f_cedulaFront;
+        $legalRepresentativeFile->f_cedulaBack = $f_cedulaBack;
+        $legalRepresentativeFile->f_selfie = $f_selfie;
+        $legalRepresentativeFile->videoFile = $videoFile;
+        $legalRepresentativeFile->f_copiaruc = $f_copiaruc;
+        $legalRepresentativeFile->f_adicional2 = $f_adicional2;
+        // Legal representative
+        $legalRepresentativeFile->f_constitucion = $f_constitucion;
+        $legalRepresentativeFile->f_nombramiento = $f_nombramiento;
+        $legalRepresentativeFile->f_nombramiento2 = $f_nombramiento2;
+        $legalRepresentativeFile->save();
         // Data for Consolidation
-        $consolidation = Consolidation::where('signature_id', $naturalPerson->id)->first();
+        $consolidation = Consolidation::where('signature_id', $legalRepresentative->id)->first();
         $consolidation->partner_id = $this->partner;
         $consolidation->save();
-        
-        return redirect()->route('signatures');
-    }
 
-    public function updatedFechaNacimiento($value)
-    {
-        $birth = date('Y', strtotime($value));
-        $currentDate = date('Y');
-        $remainingDates = $currentDate - $birth;
-        if($remainingDates >= 64)
-        {
-            $this->displayVideo = 'block';
-        }else{
-            $this->displayVideo = 'none';
-        }
+        return redirect()->route('signatures');
     }
 }

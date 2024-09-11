@@ -98,7 +98,7 @@
                                  @if ($item->tipo_solicitud == 1)
                                     <a href="{{ route('natural-persons.edit', $item) }}">{{ $item->numerodocumento }}</a>
                                  @elseif ($item->tipo_solicitud == 2)
-                                    {{ $item->numerodocumento }}
+                                    <a href="{{ route('legal-representatives.edit', $item) }}">{{ $item->numerodocumento }}</a>
                                  @elseif ($item->tipo_solicitud == 3)
                                     {{ $item->numerodocumento }}
                                  @endif
