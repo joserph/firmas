@@ -96,11 +96,23 @@
                            <td class="text-center align-middle">
                               <small>
                                  @if ($item->tipo_solicitud == 1)
-                                    <a href="{{ route('natural-persons.edit', $item) }}">{{ $item->numerodocumento }}</a>
-                                 @elseif ($item->tipo_solicitud == 2)
-                                    <a href="{{ route('legal-representatives.edit', $item) }}">{{ $item->numerodocumento }}</a>
-                                 @elseif ($item->tipo_solicitud == 3)
+                                    @if ($item->estado != 'SIN ENVIAR')
                                     {{ $item->numerodocumento }}
+                                    @else
+                                    <a href="{{ route('natural-persons.edit', $item) }}">{{ $item->numerodocumento }}</a>
+                                    @endif
+                                 @elseif ($item->tipo_solicitud == 2)
+                                    @if ($item->estado != 'SIN ENVIAR')
+                                    {{ $item->numerodocumento }}
+                                    @else
+                                    <a href="{{ route('legal-representatives.edit', $item) }}">{{ $item->numerodocumento }}</a>
+                                    @endif
+                                 @elseif ($item->tipo_solicitud == 3)
+                                    @if ($item->estado != 'SIN ENVIAR')
+                                    {{ $item->numerodocumento }}
+                                    @else
+                                    <a href="{{ route('company-members.edit', $item) }}">{{ $item->numerodocumento }}</a>
+                                    @endif
                                  @endif
                               </small>
                            </td>

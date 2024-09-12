@@ -70,12 +70,13 @@
       <div class="pictureContainer">
          <h6 class="text-center"><span class="text-danger">*</span> Copia del RUC</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_copiaruc)
-               src="{{ asset('assets/images/others/pdf_on.jpg') }}"
+            <div id="visor_f_copiaruc" wire:ignore></div>
+            @if ($f_copiaruc)
+            <embed id="pdf_f_copiaruc" src='data:application/pdf;base64,{{ $f_copiaruc }}' width='100%' height="215px" type='application/pdf'>
             @else
-               src="{{ asset('assets/images/others/ruc.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf" wire:model="f_copiaruc">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/ruc.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" id="f_copiaruc" accept=".pdf" wire:model="f_copiaruc" onchange="validateInputFilePdf('f_copiaruc')">
          </div>
          @error('f_copiaruc')
             <span class="text-danger">{{$message}}</span>
@@ -86,12 +87,13 @@
       <div class="pictureContainer">
          <h6 class="text-center"><span class="text-danger">*</span> Constitucion de Compañia</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_constitucion)
-               src="{{ asset('assets/images/others/pdf_on.jpg') }}"
+            <div id="visor_f_constitucion" wire:ignore></div>
+            @if ($f_constitucion)
+            <embed id="pdf_f_constitucion" src='data:application/pdf;base64,{{ $f_constitucion }}' width='100%' height="215px" type='application/pdf'>
             @else
-               src="{{ asset('assets/images/others/constitution.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf" wire:model="f_constitucion">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/constitution.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf" id="f_constitucion" wire:model="f_constitucion" onchange="validateInputFilePdf('f_constitucion')">
          </div>
          @error('f_constitucion')
             <span class="text-danger">{{$message}}</span>
@@ -102,12 +104,13 @@
       <div class="pictureContainer">
          <h6 class="text-center"><span class="text-danger">*</span> Nombramiento de Representante</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_nombramiento)
-               src="{{ asset('assets/images/others/pdf_on.jpg') }}"
+            <div id="visor_f_nombramiento" wire:ignore></div>
+            @if ($f_nombramiento)
+            <embed id="pdf_f_nombramiento" src='data:application/pdf;base64,{{ $f_nombramiento }}' width='100%' height="215px" type='application/pdf'>
             @else
-               src="{{ asset('assets/images/others/constitution.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf" wire:model="f_nombramiento">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/constitution.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf" id="f_nombramiento" wire:model="f_nombramiento" onchange="validateInputFilePdf('f_nombramiento')">
          </div>
          @error('f_nombramiento')
             <span class="text-danger">{{$message}}</span>
@@ -119,12 +122,13 @@
       <div class="pictureContainer">
          <h6 class="text-center">Aceptacion de Nombramiento</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_nombramiento2)
-               src="{{ asset('assets/images/others/pdf_on.jpg') }}"
+            <div id="visor_f_nombramiento2" wire:ignore></div>
+            @if ($f_nombramiento2)
+            <embed id="pdf_f_nombramiento2" src='data:application/pdf;base64,{{ $f_nombramiento2 }}' width='100%' height="215px" type='application/pdf'>
             @else
-               src="{{ asset('assets/images/others/adicional.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf" wire:model="f_nombramiento2">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/adicional.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf" id="f_nombramiento2" wire:model="f_nombramiento2" onchange="validateInputFilePdf('f_nombramiento2')">
          </div>
          @error('f_nombramiento2')
             <span class="text-danger">{{$message}}</span>
@@ -135,18 +139,15 @@
       <div class="pictureContainer">
          <h6 class="text-center">Documento Adicional</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_adicional1)
-               @if ($aditional1Extension === 'pdf')
-                  src="{{ asset('assets/images/others/pdf_on.jpg') }}"
-               @else
-                  src="{{ $f_adicional1->temporaryUrl() }}"
-               @endif
+            <div id="visor_f_adicional2" wire:ignore></div>
+            @if ($f_adicional2)
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/pdf_on.jpg') }}" alt="">
             @else
-               src="{{ asset('assets/images/others/adicional.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf,.jpg,.jpeg,.png" wire:model="f_adicional1">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/adicional.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf,.jpg,.jpeg,.png" wire:model="f_adicional2" onchange="validateInputFilePdfJpg('f_adicional2')">
          </div>
-         @error('f_adicional1')
+         @error('f_adicional2')
             <span class="text-danger">{{$message}}</span>
          @enderror
       </div>

@@ -4,13 +4,13 @@
 <div>
    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
       <div>
-         <h4 class="mb-3 mb-md-0">Representante Legal</h4>
+         <h4 class="mb-3 mb-md-0">Editar Miembro de Empresa</h4>
       </div>
       <nav aria-label="breadcrumb">
          <ol class="breadcrumb breadcrumb-dot">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ route('signatures') }}">Firmas</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Representante Legal</li>
+            <li class="breadcrumb-item active" aria-current="page">Editar Miembro de Empresa</li>
          </ol>
       </nav>
    </div>
@@ -31,9 +31,9 @@
                <hr>
                <form action="" enctype="multipart/form-data">
                @if ($currentStep === 1)
-                  @include('admin.legal-representatives.partials.form')
+                  @include('admin.company-members.partials.edit.form')
                @elseif($currentStep === 2)
-                  @include('admin.legal-representatives.partials.form2')
+                  @include('admin.company-members.partials.edit.form2')
                @endif
                </form>
                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -44,7 +44,7 @@
                   <button wire:click="incrementSteps" class="btn btn-primary">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
                   @endif
                   @if($currentStep === $totalStep)
-                  <button wire:click="saveLegalRepresentative" class="btn btn-success">Guardar <i class="fa-regular fa-floppy-disk"></i></button>
+                  <button wire:click="saveCompanyMember" class="btn btn-success">Guardar <i class="fa-regular fa-floppy-disk"></i></button>
                   @endif
                </div>
             </div>
@@ -245,7 +245,7 @@
                   visor.onload = function(e) 
                   {
                      document.getElementById(`visor_${fileName}`).innerHTML = 
-                     '<embed src="'+e.target.result+'" width="180" height="215px" />';
+                     '<embed src="'+e.target.result+'" width="180" />';
                   };
                   visor.readAsDataURL(filePhoto.files[0]);
                   document.getElementById(`img_${fileName}`).style.display = 'none';

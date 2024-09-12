@@ -143,6 +143,40 @@
    </div>
    <div class="col-sm-4">
       <div class="pictureContainer">
+         <h6 class="text-center">Cedula Representante Legal</h6>
+         <div class="picture" class="text-center">
+            <div id="visor_f_documentoRL" wire:ignore></div>
+            @if ($f_documentoRL)
+            <embed id="pdf_f_documentoRL" src='data:application/pdf;base64,{{ $f_documentoRL }}' width='100%' height="215px" type='application/pdf'>
+            @else
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/ci_rl.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf" id="f_documentoRL" wire:model="f_documentoRL" required onchange="validateInputFilePdf('f_documentoRL')">
+         </div>
+         @error('f_documentoRL')
+            <span class="text-danger">{{$message}}</span>
+         @enderror
+      </div>
+   </div>
+   <div class="col-sm-4">
+      <div class="pictureContainer">
+         <h6 class="text-center">Autorizacion del Representante</h6>
+         <div class="picture" class="text-center">
+            <div id="visor_f_autreprelegal" wire:ignore></div>
+            @if ($f_autreprelegal)
+            <embed id="pdf_f_autreprelegal" src='data:application/pdf;base64,{{ $f_autreprelegal }}' width='100%' height="215px" type='application/pdf'>
+            @else
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/adicional.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" accept=".pdf" id="f_autreprelegal" wire:model="f_autreprelegal" required onchange="validateInputFilePdf('f_autreprelegal')">
+         </div>
+         @error('f_autreprelegal')
+            <span class="text-danger">{{$message}}</span>
+         @enderror
+      </div>
+   </div>
+   <div class="col-sm-4">
+      <div class="pictureContainer">
          <h6 class="text-center">Documento Adicional</h6>
          <div class="picture" class="text-center">
             <div id="visor_f_adicional2" wire:ignore></div>

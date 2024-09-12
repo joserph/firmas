@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UanatacaController;
 use App\Livewire\CompanyMemberComponent;
+use App\Livewire\EditCompanyMemberComponent;
 use App\Livewire\EditLegalRepresentativeComponent;
 use App\Livewire\EditNaturalPersonComponent;
 use App\Livewire\LegalRepresentativeComponent;
@@ -60,4 +61,5 @@ Route::middleware(['auth'])->group(function () {
     // Edit Signatures
     Route::get('natural-persons/{id}/edit', EditNaturalPersonComponent::class)->name('natural-persons.edit');
     Route::get('legal-representatives/{id}/edit', EditLegalRepresentativeComponent::class)->name('legal-representatives.edit');
+    Route::get('company-members/{id}/edit', EditCompanyMemberComponent::class)->name('company-members.edit');
 });

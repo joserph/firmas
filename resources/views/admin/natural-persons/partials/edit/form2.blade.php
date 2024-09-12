@@ -78,7 +78,7 @@
          <div class="picture" class="text-center">
             <div id="visor_f_copiaruc" wire:ignore></div>
             @if ($f_copiaruc)
-            <embed id="pdf_f_copiaruc" src='data:application/pdf;base64,{{ $f_copiaruc }}' width='100%' type='application/pdf'>
+            <embed id="pdf_f_copiaruc" src='data:application/pdf;base64,{{ $f_copiaruc }}' width='100%' height="215px" type='application/pdf'>
             @else
             <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/ruc.jpg') }}" alt="">
             @endif

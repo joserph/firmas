@@ -70,12 +70,13 @@
       <div class="pictureContainer">
          <h6 class="text-center"><span class="text-danger">*</span> Copia del RUC</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_copiaruc)
-               src="{{ asset('assets/images/others/pdf_on.jpg') }}"
+            <div id="visor_f_copiaruc" wire:ignore></div>
+            @if ($f_copiaruc)
+            <embed id="pdf_f_copiaruc" src='data:application/pdf;base64,{{ $f_copiaruc }}' width='100%' height="215px" type='application/pdf'>
             @else
-               src="{{ asset('assets/images/others/ruc.jpg') }}"
-            @endif  alt="">
-            <input class="inputImage" type="file" accept=".pdf" wire:model="f_copiaruc">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/ruc.jpg') }}" alt="">
+            @endif
+            <input class="inputImage" type="file" id="f_copiaruc" accept=".pdf" wire:model="f_copiaruc" onchange="validateInputFilePdf('f_copiaruc')">
          </div>
          @error('f_copiaruc')
             <span class="text-danger">{{$message}}</span>
@@ -86,15 +87,11 @@
       <div class="pictureContainer">
          <h6 class="text-center">Documento Adicional 1</h6>
          <div class="picture" class="text-center">
-            <img class="rounded mx-auto d-block img-thumbnail imgCustom" @if ($f_adicional2)
-               @if ($aditional1Extension === 'pdf')
-                  src="{{ asset('assets/images/others/pdf_on.jpg') }}"
-               @else
-                  src="{{ $f_adicional2->temporaryUrl() }}"
-               @endif
+            @if ($f_adicional2)
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/pdf_on.jpg') }}" alt="">
             @else
-               src="{{ asset('assets/images/others/adicional.jpg') }}"
-            @endif  alt="">
+            <img class="rounded mx-auto d-block img-thumbnail imgCustom" src="{{ asset('assets/images/others/adicional.jpg') }}" alt="">
+            @endif
             <input class="inputImage" type="file" accept=".pdf,.jpg,.jpeg,.png" wire:model="f_adicional2">
          </div>
          @error('f_adicional2')

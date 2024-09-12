@@ -227,7 +227,110 @@
                });
          }
       }
-      
+      // VALIDATE INPUTS FILES
+      function validateInputFilePhoto(fileName)
+      {
+         var filePhoto = document.getElementById(`${fileName}`);
+         var fileRoute = filePhoto.value;
+         var validExpression = /(.JPG|.jpg|.jpeg|.JPEG|.png|.PNG)$/i;
+         if(!validExpression.exec(fileRoute)){
+            Swal.fire({
+               icon: 'error',
+               title: 'No es una imagen',
+               text: 'Asegurese de haber seleccionado un Imagen'
+            });
+            filePhoto.value = '';
+            return false;
+         }else{
+            if (filePhoto.files && filePhoto.files[0]) 
+            {
+                  var visor = new FileReader();
+                  visor.onload = function(e) 
+                  {
+                     document.getElementById(`visor_${fileName}`).innerHTML = 
+                     '<embed src="'+e.target.result+'" width="180" height="215px" />';
+                  };
+                  visor.readAsDataURL(filePhoto.files[0]);
+                  document.getElementById(`img_${fileName}`).style.display = 'none';
+            }
+         }
+      }
+      function validateInputFileMp4(fileName)
+      {
+         var filePhoto = document.getElementById(`${fileName}`);
+         var fileRoute = filePhoto.value;
+         var validExpression = /(.mp4|.MP4)$/i;
+         if(!validExpression.exec(fileRoute)){
+            Swal.fire({
+               icon: 'error',
+               title: 'No es una video',
+               text: 'Asegurese de haber seleccionado un Video'
+            });
+            filePhoto.value = '';
+            return false;
+         }else{
+            if (filePhoto.files && filePhoto.files[0]) 
+            {
+                  var visor = new FileReader();
+                  visor.onload = function(e) 
+                  {
+                     document.getElementById(`visor_${fileName}`).innerHTML = 
+                     '<source src="'+e.target.result+'" width="180" type="video/mp4" />';
+                  };
+                  visor.readAsDataURL(filePhoto.files[0]);
+                  document.getElementById(`mp4_${fileName}`).style.display = 'none';
+            }
+         }
+      }
+      function validateInputFilePdf(fileName)
+      {
+         var filePhoto = document.getElementById(`${fileName}`);
+         var fileRoute = filePhoto.value;
+         var validExpression = /(.PDF|.pdf)$/i;
+         if(!validExpression.exec(fileRoute)){
+            Swal.fire({
+               icon: 'error',
+               title: 'No es una PDF',
+               text: 'Asegurese de haber seleccionado un PDF'
+            });
+            filePhoto.value = '';
+            return false;
+         }else{
+            if (filePhoto.files && filePhoto.files[0]) 
+            {
+                  var visor = new FileReader();
+                  visor.onload = function(e) 
+                  {
+                     document.getElementById(`visor_${fileName}`).innerHTML = 
+                     '<embed src="'+e.target.result+'" width="180" height="215px" type="application/pdf" />';
+                  };
+                  visor.readAsDataURL(filePhoto.files[0]);
+                  document.getElementById(`pdf_${fileName}`).style.display = 'none';
+            }
+         }
+      }
+      function validateInputFilePdfJpg(fileName)
+      {
+         var filePhoto = document.getElementById(`${fileName}`);
+         var fileRoute = filePhoto.value;
+         var validExpression = /(.PDF|.pdf|.jpg|.JPG|.jpeg|.JPEG|.png|.PNG)$/i;
+         if(!validExpression.exec(fileRoute)){
+            alert('Asegurese de haber seleccionado un PDF o Imagen');
+            filePhoto.value = '';
+            return false;
+         }else{
+            if (filePhoto.files && filePhoto.files[0]) 
+            {
+                  var visor = new FileReader();
+                  visor.onload = function(e) 
+                  {
+                     document.getElementById(`visor_${fileName}`).innerHTML = 
+                     '<embed src="'+e.target.result+'" width="180" height="215px" />';
+                  };
+                  visor.readAsDataURL(filePhoto.files[0]);
+            }
+         }
+      }
    </script>
    @endpush
    @script

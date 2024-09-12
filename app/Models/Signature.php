@@ -49,6 +49,7 @@ class Signature extends Model
     {
         return [
             'SIN ENVIAR'            => __('SIN ENVIAR'),
+            'ACTUALIZADO'           => __('ACTUALIZADO'),
             'NUEVO'                 => __('NUEVO'), // La solicitud ha sido ingresada y aún no ha sido revisada.
             'ASIGNADO'              => __('ASIGNADO'), // La solicitud ha sido asignada a un operador de registro para su verificación.
             'EN VALIDACION'         => __('EN VALIDACION'), // La solicitud está siendo revisada por un operador de registro.

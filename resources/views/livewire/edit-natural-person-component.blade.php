@@ -247,7 +247,7 @@
                   visor.onload = function(e) 
                   {
                      document.getElementById(`visor_${fileName}`).innerHTML = 
-                     '<embed src="'+e.target.result+'" width="180" />';
+                     '<embed src="'+e.target.result+'" width="180" height="215px" />';
                   };
                   visor.readAsDataURL(filePhoto.files[0]);
                   document.getElementById(`img_${fileName}`).style.display = 'none';
@@ -301,7 +301,7 @@
                   visor.onload = function(e) 
                   {
                      document.getElementById(`visor_${fileName}`).innerHTML = 
-                     '<embed src="'+e.target.result+'" width="180" type="application/pdf" />';
+                     '<embed src="'+e.target.result+'" width="180" height="215px" type="application/pdf" />';
                   };
                   visor.readAsDataURL(filePhoto.files[0]);
                   document.getElementById(`pdf_${fileName}`).style.display = 'none';
@@ -324,7 +324,7 @@
                   visor.onload = function(e) 
                   {
                      document.getElementById(`visor_${fileName}`).innerHTML = 
-                     '<embed src="'+e.target.result+'" width="180" />';
+                     '<embed src="'+e.target.result+'" width="180" height="215px" />';
                   };
                   visor.readAsDataURL(filePhoto.files[0]);
             }
